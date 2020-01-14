@@ -1,0 +1,68 @@
+/* Only keep the 10 most recent builds and config schedule 15m. */
+def projectProperties = [
+    [$class: 'BuildDiscarderProperty',strategy: [$class: 'LogRotator', numToKeepStr: '10']],
+	pipelineTriggers([pollSCM('H/15 * * * *')])
+]
+
+properties(projectProperties)
+
+node {
+  try {
+    notifyBuild('STARTED')
+
+    stage('Clone Backend Golang Repository'){
+		git credentialsId: 'git-credential', url: 'git@github.com:golang-microservices/template.git', branch: 'develop'
+	}
+
+    stage('Heroku Configuration') {
+		sh 'git config --global user.name "jenkins"'
+        sh 'git config --global user.email "jenkins@kbtg.com"'
+		sh 'rm -rf ../kbtg@heroku && mkdir ../kbtg@heroku'
+        sh 'cp -rf . ../kbtg@heroku && rm -rf ../kbtg@heroku/.git && rm -f ../kbtg@heroku/.gitignore'
+        sh 'rm -rf ../mxtien-chatbot-demo'
+	}
+	
+    stage('Heroku Deployment') {
+        def msg = "Jenkins commmit '${env.JOB_NAME} ${env.BUILD_NUMBER}'"
+        sh 'cd ../ && heroku git:clone -a mxtien-chatbot-demo'
+        sh 'cp -rf ../kbtg@heroku/* ../mxtien-chatbot-demo/'
+        sh 'cd ../mxtien-chatbot-demo && git add .'
+		sh 'cd ../mxtien-chatbot-demo && git commit -am "Jenkins commit"'
+		sh 'cd ../mxtien-chatbot-demo && git push heroku master'
+	}
+
+    stage('Cleanup') {
+		sh 'rm /var/jenkins_home/.ssh/id_rsa.pub'
+	}	
+  } catch (e) {
+      currentBuild.result = "FAILED"
+  } finally {
+      notifyBuild(currentBuild.result)
+  }
+}
+
+def notifyBuild(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  buildStatus =  buildStatus ?: 'SUCCESSFUL'
+
+  // Default values
+  def colorName = 'RED'
+  def colorCode = '#FF0000'
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${subject} <${env.BUILD_URL}|Job URL> - <${env.BUILD_URL}/console|Console Output>"
+
+  // Override default values based on build status
+  if (buildStatus == 'STARTED') {
+    color = 'YELLOW'
+    colorCode = '#FFFF00'
+  } else if (buildStatus == 'SUCCESSFUL') {
+    color = 'GREEN'
+    colorCode = '#00FF00'
+  } else {
+    color = 'RED'
+    colorCode = '#FF0000'
+  }
+
+  // Send notifications
+  slackSend(color: colorCode, message: summary)
+}

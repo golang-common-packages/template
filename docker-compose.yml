@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  backend-golang:
+    image: backend-golang:latest
+    container_name: backend-golang
+    hostname: backend-golang
+    ports:
+      - "127.0.0.1:4040:3000"
+    networks:
+      - default
+      - kires-network
+
+networks:
+  default:
+    driver: bridge
+  kires-network:
+    external:
+      name: kires-network
