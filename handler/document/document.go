@@ -8,6 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 	validator "gopkg.in/go-playground/validator.v9"
 
+	"github.com/golang-microservices/cloud-storage"
+
 	"github.com/golang-microservices/template/config"
 	"github.com/golang-microservices/template/model"
 )
@@ -71,7 +73,7 @@ func (h *Handler) save() echo.HandlerFunc {
 
 func (h *Handler) files() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		fileInfo := &model.FileModel{Path: ""}
+		fileInfo := &cloudStorage.FileModel{Path: ""}
 		files, err := h.Storage.List(fileInfo)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err)
@@ -107,7 +109,7 @@ func (h *Handler) upload() echo.HandlerFunc {
 		// Don't worry about them not being the same "type". io.Reader is an interface and can be implemented by many different types.
 		data := bytes.NewReader(buf.Bytes())
 
-		fileInfo := &model.FileModel{
+		fileInfo := &cloudStorage.FileModel{
 			Name:     name,
 			MimeType: mimeType,
 			ParentID: parentID,
@@ -125,7 +127,7 @@ func (h *Handler) upload() echo.HandlerFunc {
 
 func (h *Handler) delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		fileInfo := &model.FileModel{
+		fileInfo := &cloudStorage.FileModel{
 			SourcesID: c.QueryParam("fileid"),
 		}
 
@@ -140,7 +142,7 @@ func (h *Handler) delete() echo.HandlerFunc {
 
 func (h *Handler) donwload() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		fileInfo := &model.FileModel{
+		fileInfo := &cloudStorage.FileModel{
 			SourcesID: c.QueryParam("fileid"),
 		}
 

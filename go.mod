@@ -14,9 +14,10 @@ require (
 	github.com/go-playground/locales v0.12.1 // indirect
 	github.com/go-playground/universal-translator v0.16.0 // indirect
 	github.com/go-redis/redis v6.15.2+incompatible
+	github.com/golang-microservices/cloud-storage v0.0.0-20200114072038-181653167f0b
 	github.com/gorilla/websocket v1.4.0
 	github.com/jinzhu/gorm v1.9.10
-	github.com/koltyakov/gosip v0.0.0-20200102222441-af1a25a81cb9
+	github.com/koltyakov/gosip v0.0.0-20200111092621-aa4d91f6fb1b
 	github.com/labstack/echo/v4 v4.1.5
 	github.com/leodido/go-urn v1.1.0 // indirect
 	github.com/lib/pq v1.2.0
@@ -33,7 +34,7 @@ require (
 	github.com/xlzd/gotp v0.0.0-20181030022105-c8557ba2c119
 	go.mongodb.org/mongo-driver v1.0.2
 	go.opencensus.io v0.21.0
-	google.golang.org/api v0.3.1
+	google.golang.org/api v0.15.0
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.29.0

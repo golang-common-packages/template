@@ -11,6 +11,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
+	"github.com/golang-microservices/cloud-storage"
+
 	"github.com/golang-microservices/template/config"
 	"github.com/golang-microservices/template/model"
 
@@ -25,7 +27,6 @@ import (
 	"github.com/golang-microservices/template/common/service/cachestore"
 	"github.com/golang-microservices/template/common/service/datastore"
 	"github.com/golang-microservices/template/common/service/email"
-	"github.com/golang-microservices/template/common/service/filestore"
 	"github.com/golang-microservices/template/common/service/logger"
 	"github.com/golang-microservices/template/common/service/monitor"
 
@@ -81,7 +82,7 @@ func main() {
 		Config:    &conf,
 		Database:  datastore.NewDatastore(datastore.MONGODB, &conf.Service),
 		Cache:     cachestore.NewCachestore(cachestore.REDIS, &conf.Service),
-		Storage:   filestore.NewFilestore(filestore.DROPBOX, &conf.Service),
+		Storage:   cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
 		Email:     email.NewMailClient(email.SENDGRID, &conf.Service),
 		Monitor:   monitor.NewMonitorStore(monitor.PGO, &conf.Server, &conf.Service),
 		JWT:       &jwt.Client{},
