@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/golang-microservices/template/config"
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/config"
+	"github.com/golang-common-packages/template/model"
 	"github.com/labstack/echo/v4"
 )
 

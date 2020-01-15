@@ -8,7 +8,7 @@ package main
 import (
     "fmt"
 
-	"github.com/golang-microservices/template/common/util/divide"
+	"github.com/golang-common-packages/template/common/util/divide"
 )
 
 func main() {

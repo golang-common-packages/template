@@ -10,7 +10,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/lib/pq"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // PostgresDatastore manage all postgres action

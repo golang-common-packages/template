@@ -6,7 +6,7 @@ package main
 import (
     "fmt"
 
-	"github.com/golang-microservices/template/common/util/encoding"
+	"github.com/golang-common-packages/template/common/util/encoding"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package stream
 
 import (
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // ProducerStore is abstract producer

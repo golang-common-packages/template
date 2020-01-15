@@ -6,7 +6,7 @@ import (
 
 	"github.com/Shopify/sarama"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // KafkaStore manage all redis action

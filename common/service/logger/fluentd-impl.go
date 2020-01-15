@@ -7,7 +7,7 @@ import (
 
 	"github.com/fluent/fluent-logger-golang/fluent"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // FluentClient manage all fluent action

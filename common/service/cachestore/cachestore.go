@@ -5,9 +5,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 
-	"github.com/golang-microservices/template/common/util/hash"
+	"github.com/golang-common-packages/template/common/util/hash"
 )
 
 // Cachestore store function in cachestore package

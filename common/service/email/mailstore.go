@@ -1,7 +1,7 @@
 package email
 
 import (
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // Mailstore store function in email package

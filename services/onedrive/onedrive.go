@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/golang-microservices/template/services"
+	"github.com/golang-common-packages/template/services"
 )
 
 // OneDriveService manage all drive action

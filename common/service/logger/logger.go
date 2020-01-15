@@ -1,6 +1,6 @@
 package logger
 
-import "github.com/golang-microservices/template/model"
+import "github.com/golang-common-packages/template/model"
 
 // Loggerstore store function in logging package
 type LoggerStore interface {

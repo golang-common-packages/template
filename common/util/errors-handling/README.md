@@ -6,7 +6,7 @@ package main
 import (
     "fmt"
 
-	"github.com/golang-microservices/template/common/util/errhandling"
+	"github.com/golang-common-packages/template/common/util/errhandling"
 )
 
 func main() {

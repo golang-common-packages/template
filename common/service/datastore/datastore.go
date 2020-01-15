@@ -1,7 +1,7 @@
 package datastore
 
 import (
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 	// "go.mongodb.org/mongo-driver/bson/primitive"
 )
 

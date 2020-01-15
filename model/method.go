@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/golang-microservices/template/common/util/hash"
+	"github.com/golang-common-packages/template/common/util/hash"
 )
 
 // toString private function convert Service config to string

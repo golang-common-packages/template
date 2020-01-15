@@ -11,7 +11,7 @@ node {
     notifyBuild('STARTED')
 
     stage('Clone Backend Golang Repository'){
-		git credentialsId: 'git-credential', url: 'git@github.com:golang-microservices/template.git', branch: 'develop'
+		git credentialsId: 'git-credential', url: 'git@github.com:golang-common-packages/template.git', branch: 'develop'
 	}
 
     stage('Heroku Configuration') {

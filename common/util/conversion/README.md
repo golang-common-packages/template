@@ -8,7 +8,7 @@ package main
 import (
     "fmt"
 
-	"github.com/golang-microservices/template/common/util/conversion"
+	"github.com/golang-common-packages/template/common/util/conversion"
 )
 
 func main() {
@@ -34,7 +34,7 @@ package main
 import (
     "fmt"
 
-	"github.com/golang-microservices/template/common/util/conversion"
+	"github.com/golang-common-packages/template/common/util/conversion"
 )
 
 func main() {
@@ -55,7 +55,7 @@ package main
 import (
     "fmt"
     
-	"github.com/golang-microservices/template/common/util/conversion"
+	"github.com/golang-common-packages/template/common/util/conversion"
 )
 
 func main() {

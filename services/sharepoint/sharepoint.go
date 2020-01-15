@@ -12,7 +12,7 @@ import (
 	"github.com/koltyakov/gosip/api"
 	strategy "github.com/koltyakov/gosip/auth/saml"
 
-	"github.com/golang-microservices/template/services"
+	"github.com/golang-common-packages/template/services"
 )
 
 // SharepointService manage all sharepoint action
@@ -155,6 +155,6 @@ func Download(sp *SharepointService, fileModel *model.FileModel) ([]byte, error)
 
 // Delete function will delete a file with fileID
 func Delete(sp *SharepointService, fileModel *model.FileModel) error {
-	_, err := sp.SharepointService.Conf(config).Web().GetFile(fileModel.SourcesID).Recycle()
+	err := sp.SharepointService.Conf(config).Web().GetFile(fileModel.SourcesID).Recycle()
 	return err
 }

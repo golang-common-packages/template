@@ -6,7 +6,7 @@ import (
 
 	"github.com/streadway/amqp"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // RabbitMQStore manage all redis action

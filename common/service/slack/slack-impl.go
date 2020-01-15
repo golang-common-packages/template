@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // SlackClient manage all slack action

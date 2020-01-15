@@ -6,8 +6,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/golang-microservices/template/common/service/monitor"
-	"github.com/golang-microservices/template/config"
+	"github.com/golang-common-packages/template/common/service/monitor"
+	"github.com/golang-common-packages/template/config"
 )
 
 // Handler manage all request and dependency

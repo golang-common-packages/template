@@ -3,7 +3,7 @@ package monitor
 import (
 	"github.com/labstack/echo/v4"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // MonitorStore function in newrelic package

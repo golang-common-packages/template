@@ -7,7 +7,7 @@ import (
 
 	"gopkg.in/gomail.v2"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // EmailClient manage all email action

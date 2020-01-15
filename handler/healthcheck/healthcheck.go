@@ -3,8 +3,8 @@ package healthcheck
 import (
 	"net/http"
 
+	"github.com/golang-common-packages/template/config"
 	"github.com/labstack/echo/v4"
-	"github.com/golang-microservices/template/config"
 )
 
 // Handler manage all request and dependency

@@ -4,11 +4,12 @@
 package main
 
 import (
-    "math/rand"
-	"time"
-    "fmt"
+
+"fmt"
+"math/rand"
+"time"
     
-	"github.com/golang-microservices/template/common/util/manipulation"
+	"github.com/golang-common-packages/template/common/util/manipulation"
 )
 
 func main() {

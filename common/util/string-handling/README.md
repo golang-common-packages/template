@@ -6,7 +6,7 @@ package main
 import (
     "fmt"
     
-	"github.com/golang-microservices/template/common/util/string-handling"
+	"github.com/golang-common-packages/template/common/util/string-handling"
 )
 
 func main() {

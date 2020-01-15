@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	validator "gopkg.in/go-playground/validator.v9"
+	"gopkg.in/go-playground/validator.v9"
 
-	"github.com/golang-microservices/cloud-storage"
+	"github.com/golang-common-packages/cloud-storage"
 
-	"github.com/golang-microservices/template/config"
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/config"
+	"github.com/golang-common-packages/template/model"
 )
 
 // Handler manage all request and dependency

@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	nr "github.com/newrelic/go-agent"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 )
 
 // RelicClient manage all slack action

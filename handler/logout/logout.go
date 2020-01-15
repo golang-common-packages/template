@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/golang-microservices/template/config"
+	"github.com/golang-common-packages/template/config"
 	"github.com/labstack/echo/v4"
 )
 

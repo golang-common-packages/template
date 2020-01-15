@@ -8,9 +8,9 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/labstack/echo/v4"
 
-	"github.com/golang-microservices/template/model"
+	"github.com/golang-common-packages/template/model"
 
-	"github.com/golang-microservices/template/common/util/hash"
+	"github.com/golang-common-packages/template/common/util/hash"
 )
 
 // RedisCacheStore manage all redis action
