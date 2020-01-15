@@ -3,9 +3,9 @@ package refreshtoken
 import (
 	"net/http"
 
-	"github.com/labstack/echo/v4"
 	"github.com/golang-microservices/template/config"
 	"github.com/golang-microservices/template/model"
+	"github.com/labstack/echo/v4"
 )
 
 // Handler manage all request and dependency
@@ -20,7 +20,7 @@ func New(env *config.Environment) *Handler {
 
 // Handler register all path to echo.Echo
 func (h *Handler) Handler(e *echo.Group) {
-	e.GET("/refresh", h.refreshtoken(), h.JWT.RefreshTokentMiddleware(h.Config.Token.Refreshtoken))
+	e.GET("/refresh", h.refreshtoken(), h.JWT.RefreshTokentMiddleware(h.Config.Token.Refreshtoken.PublicKey))
 }
 
 func (h *Handler) refreshtoken() echo.HandlerFunc {
@@ -41,7 +41,7 @@ func (h *Handler) refreshtoken() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusUnauthorized, err)
 		}
 
-		accessToken, refreshToken, err := h.JWT.CreateNewTokens(h.Config.Token, user.Username, "normal", true)
+		accessToken, refreshToken, err := h.JWT.CreateNewTokens(h.Config.Token.Accesstoken.PrivateKey, h.Config.Token.Refreshtoken.PrivateKey, user.Email, "normal", h.Config.Token.Accesstoken.JWTTimeout, true)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnauthorized, err)
 		}

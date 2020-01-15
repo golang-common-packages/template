@@ -15,10 +15,11 @@ require (
 	github.com/go-playground/universal-translator v0.16.0 // indirect
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/golang-microservices/cloud-storage v0.0.0-20200114072038-181653167f0b
+	github.com/golang-microservices/echo-jwt-middleware v0.0.0-20200115021757-4c8773e4d1d7
 	github.com/gorilla/websocket v1.4.0
 	github.com/jinzhu/gorm v1.9.10
 	github.com/koltyakov/gosip v0.0.0-20200111092621-aa4d91f6fb1b
-	github.com/labstack/echo/v4 v4.1.5
+	github.com/labstack/echo/v4 v4.1.13
 	github.com/leodido/go-urn v1.1.0 // indirect
 	github.com/lib/pq v1.2.0
 	github.com/newrelic/go-agent v2.7.0+incompatible

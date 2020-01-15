@@ -26,8 +26,8 @@ func New(env *config.Environment) *Handler {
 
 // Handler function will register all path to echo.Echo
 func (h *Handler) Handler(e *echo.Group) {
-	e.GET("/document", h.list(), h.JWT.Middleware(h.Config.Token.Accesstoken), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
-	e.POST("/document", h.save(), h.JWT.Middleware(h.Config.Token.Accesstoken), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
+	e.GET("/document", h.list(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
+	e.POST("/document", h.save(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
 	e.GET("/drive", h.files())
 	// e.GET("/drive", driveController.List())
 	e.POST("/drive", h.upload())

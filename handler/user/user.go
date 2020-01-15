@@ -25,7 +25,7 @@ func New(env *config.Environment) *Handler {
 
 // Handler function will register all path to echo.Echo
 func (h *Handler) Handler(e *echo.Group) {
-	e.GET("/user", h.list(), h.JWT.Middleware(h.Config.Token.Accesstoken), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
+	e.GET("/user", h.list(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
 	e.POST("/user/register", h.register(), h.Monitor.Middleware())
 	e.GET("/user/active/:otp", h.active(), h.Monitor.Middleware())
 }

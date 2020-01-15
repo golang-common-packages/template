@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/labstack/echo/v4"
 	"github.com/golang-microservices/template/config"
+	"github.com/labstack/echo/v4"
 )
 
 // Handler manage all request and dependency
@@ -20,7 +20,7 @@ func New(env *config.Environment) *Handler {
 
 // Handler function will register all APIs path at login package
 func (h *Handler) Handler(e *echo.Group) {
-	e.GET("/logout", h.Logout(), h.Monitor.Middleware(), h.JWT.Middleware(h.Config.Token.Accesstoken), h.Cache.Middleware(h.Hash))
+	e.GET("/logout", h.Logout(), h.Monitor.Middleware(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Cache.Middleware(h.Hash))
 }
 
 // Logout function will handle login request

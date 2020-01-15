@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/labstack/echo/v4"
 	"github.com/golang-microservices/template/config"
 	"github.com/golang-microservices/template/model"
+	"github.com/labstack/echo/v4"
 )
 
 // Handler manage all request and dependency
@@ -38,7 +38,7 @@ func (h *Handler) login() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusNotFound, err)
 		}
 		if h.Hash.SHA512(requestBody.Password) == *user.Password && user.IsActive == true {
-			accessToken, refreshToken, err := h.JWT.CreateNewTokens(h.Config.Token, requestBody.Username, "normal", true)
+			accessToken, refreshToken, err := h.JWT.CreateNewTokens(h.Config.Token.Accesstoken.PrivateKey, h.Config.Token.Refreshtoken.PrivateKey, user.Email, "normal", h.Config.Token.Accesstoken.JWTTimeout, true)
 			if err != nil {
 				return echo.NewHTTPError(http.StatusInternalServerError, err)
 			}

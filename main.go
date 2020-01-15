@@ -12,6 +12,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/golang-microservices/cloud-storage"
+	"github.com/golang-microservices/echo-jwt-middleware"
 
 	"github.com/golang-microservices/template/config"
 	"github.com/golang-microservices/template/model"
@@ -33,7 +34,6 @@ import (
 	"github.com/golang-microservices/template/common/util/apigroup"
 	"github.com/golang-microservices/template/common/util/condition"
 	"github.com/golang-microservices/template/common/util/hash"
-	"github.com/golang-microservices/template/common/util/jwt"
 	"github.com/golang-microservices/template/common/util/otp"
 )
 
@@ -85,7 +85,7 @@ func main() {
 		Storage:   cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
 		Email:     email.NewMailClient(email.SENDGRID, &conf.Service),
 		Monitor:   monitor.NewMonitorStore(monitor.PGO, &conf.Server, &conf.Service),
-		JWT:       &jwt.Client{},
+		JWT:       &jwtMiddleware.Client{},
 		Condition: &condition.Client{},
 		Hash:      &hash.Client{},
 		OTP:       &otp.Client{},
