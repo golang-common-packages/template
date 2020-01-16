@@ -2,9 +2,9 @@ version: '2'
 
 services:
   backend-golang:
-    image: backend-golang:latest
-    container_name: backend-golang
-    hostname: backend-golang
+    image: golang-common-packages:latest
+    container_name: golang-common-packages
+    hostname: golang-common-packages
     ports:
       - "127.0.0.1:4040:3000"
     networks:
