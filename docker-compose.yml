@@ -9,11 +9,11 @@ services:
       - "127.0.0.1:4040:3000"
     networks:
       - default
-      - kires-network
+      - template-network
 
 networks:
   default:
     driver: bridge
-  kires-network:
+  template-network:
     external:
-      name: kires-network
+      name: template-network
