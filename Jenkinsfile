@@ -10,19 +10,19 @@ node {
   try {
     notifyBuild('STARTED')
 
-    stage('Clone Backend Golang Repository'){
+    stage('Clone Backend golang-common-packages/template Repository'){
 		  checkout scm
 	  }
 
-    stage('Build Docker Image for Backend Golang') {      
-      sh 'docker build --rm -t backend-golang:latest .'
+    stage('Build Docker Image for golang-common-packages/template') {
+      sh 'docker build --rm -t golang-common-packages:latest .'
 		}
 
-    stage('Remove Backend Golang Container') {      
+    stage('Remove golang-common-packages/template Container') {
       sh 'docker-compose down'
 		}    
 	
-    stage('Run Docker Image for Backend Golang') {
+    stage('Run Docker Image for golang-common-packages/template') {
       sh 'docker-compose up -d'
 	  }
   } catch (e) {
