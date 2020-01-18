@@ -13,6 +13,7 @@ import (
 
 	"github.com/golang-common-packages/cloud-storage"
 	"github.com/golang-common-packages/echo-jwt-middleware"
+	"github.com/golang-common-packages/email"
 
 	"github.com/golang-common-packages/template/config"
 	"github.com/golang-common-packages/template/model"
@@ -27,7 +28,6 @@ import (
 
 	"github.com/golang-common-packages/template/common/service/cachestore"
 	"github.com/golang-common-packages/template/common/service/datastore"
-	"github.com/golang-common-packages/template/common/service/email"
 	"github.com/golang-common-packages/template/common/service/logger"
 	"github.com/golang-common-packages/template/common/service/monitor"
 
@@ -79,11 +79,17 @@ func main() {
 
 	// Setup environment variable
 	env := &config.Environment{
-		Config:    &conf,
-		Database:  datastore.NewDatastore(datastore.MONGODB, &conf.Service),
-		Cache:     cachestore.NewCachestore(cachestore.REDIS, &conf.Service),
-		Storage:   cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
-		Email:     email.NewMailClient(email.SENDGRID, &conf.Service),
+		Config:   &conf,
+		Database: datastore.NewDatastore(datastore.MONGODB, &conf.Service),
+		Cache:    cachestore.NewCachestore(cachestore.REDIS, &conf.Service),
+		Storage:  cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
+		Email: email.NewMailClient(email.SENDGRID, &email.MailConfig{
+			URL:       conf.Service.Email.Host,
+			Port:      conf.Service.Email.Port,
+			Username:  conf.Service.Email.Username,
+			Password:  conf.Service.Email.Password,
+			SecretKey: conf.Service.Email.Key,
+		}),
 		Monitor:   monitor.NewMonitorStore(monitor.PGO, &conf.Server, &conf.Service),
 		JWT:       &jwtMiddleware.Client{},
 		Condition: &condition.Client{},
