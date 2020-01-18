@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/golang-common-packages/template/common/service/cachestore"
 	"github.com/golang-common-packages/template/common/service/datastore"
-	"github.com/golang-common-packages/template/common/service/email"
 	"github.com/golang-common-packages/template/common/service/monitor"
 	"github.com/golang-common-packages/template/common/util/condition"
 	"github.com/golang-common-packages/template/common/util/hash"
@@ -12,15 +11,16 @@ import (
 
 	"github.com/golang-common-packages/cloud-storage"
 	"github.com/golang-common-packages/echo-jwt-middleware"
+	"github.com/golang-common-packages/email"
 )
 
-// Environment stuct for variable environment
+// Environment model for variable environment
 type Environment struct {
 	Config    *model.Root
 	Database  datastore.Datastore
 	Cache     cachestore.Cachestore
 	Storage   cloudStorage.Filestore
-	Email     email.Mailstore
+	Email     email.IMailClient
 	Monitor   monitor.MonitorStore
 	JWT       jwtMiddleware.Assertion
 	Condition condition.Storage
