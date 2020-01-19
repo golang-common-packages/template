@@ -11,9 +11,11 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
+	"github.com/golang-common-packages/caching"
 	"github.com/golang-common-packages/cloud-storage"
 	"github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
+	"github.com/golang-common-packages/hash"
 
 	"github.com/golang-common-packages/template/config"
 	"github.com/golang-common-packages/template/model"
@@ -26,14 +28,12 @@ import (
 	"github.com/golang-common-packages/template/handler/refreshtoken"
 	"github.com/golang-common-packages/template/handler/user"
 
-	"github.com/golang-common-packages/template/common/service/cachestore"
 	"github.com/golang-common-packages/template/common/service/datastore"
 	"github.com/golang-common-packages/template/common/service/logger"
 	"github.com/golang-common-packages/template/common/service/monitor"
 
 	"github.com/golang-common-packages/template/common/util/apigroup"
 	"github.com/golang-common-packages/template/common/util/condition"
-	"github.com/golang-common-packages/template/common/util/hash"
 	"github.com/golang-common-packages/template/common/util/otp"
 )
 
@@ -78,11 +78,16 @@ func main() {
 	apiGroup := e.Group(apigroup.SetAPIGroup(conf.Server.Name, conf.Server.Version))
 
 	// Setup environment variable
-	env := &config.Environment{
+	var env = &config.Environment{
 		Config:   &conf,
 		Database: datastore.NewDatastore(datastore.MONGODB, &conf.Service),
-		Cache:    cachestore.NewCachestore(cachestore.REDIS, &conf.Service),
-		Storage:  cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
+		Cache: caching.New(caching.REDIS, &caching.CachingConfig{Redis: caching.Redis{
+			Prefix:   conf.Service.Database.Redis.Prefix,
+			Password: conf.Service.Database.Redis.Password,
+			Host:     conf.Service.Database.Redis.Host,
+			DB:       conf.Service.Database.Redis.DB,
+		}}),
+		Storage: cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
 		Email: email.NewMailClient(email.SENDGRID, &email.MailConfig{
 			URL:       conf.Service.Email.Host,
 			Port:      conf.Service.Email.Port,
@@ -95,9 +100,7 @@ func main() {
 		Condition: &condition.Client{},
 		Hash:      &hash.Client{},
 		OTP:       &otp.Client{},
-	}
-
-	// API routing
+	} // API routing
 	healthcheck.New(env).Handler(apiGroup)
 	login.New(env).Handler(apiGroup)
 	logout.New(env).Handler(apiGroup)
