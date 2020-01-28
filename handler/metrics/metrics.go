@@ -6,7 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/golang-common-packages/template/common/service/monitor"
+	"github.com/golang-common-packages/monitoring"
 	"github.com/golang-common-packages/template/config"
 )
 
@@ -32,8 +32,8 @@ func New(env *config.Environment) *Handler {
 func (h *Handler) Handler(e *echo.Group) {
 	var handler echo.HandlerFunc
 	switch h.Environment.Monitor.(type) {
-	case *monitor.PGOClient:
-		pgo, _ := h.Environment.Monitor.(*monitor.PGOClient)
+	case *monitoring.PGOClient:
+		pgo, _ := h.Environment.Monitor.(*monitoring.PGOClient)
 		handler = echo.WrapHandler(pgo.Handler)
 		break
 	default:

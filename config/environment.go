@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/golang-common-packages/template/common/service/datastore"
-	"github.com/golang-common-packages/template/common/service/monitor"
 	"github.com/golang-common-packages/template/common/util/condition"
 	"github.com/golang-common-packages/template/model"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
+	"github.com/golang-common-packages/monitoring"
 	"github.com/golang-common-packages/otp"
 )
 
@@ -21,7 +21,7 @@ type Environment struct {
 	Cache     caching.ICaching
 	Storage   cloudStorage.Filestore
 	Email     email.IMailClient
-	Monitor   monitor.MonitorStore
+	Monitor   monitoring.IMonitoring
 	JWT       jwtMiddleware.Assertion
 	Condition condition.Storage
 	Hash      hash.IHash

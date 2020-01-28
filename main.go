@@ -16,6 +16,7 @@ import (
 	"github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
+	"github.com/golang-common-packages/monitoring"
 	"github.com/golang-common-packages/otp"
 
 	"github.com/golang-common-packages/template/config"
@@ -31,7 +32,6 @@ import (
 
 	"github.com/golang-common-packages/template/common/service/datastore"
 	"github.com/golang-common-packages/template/common/service/logger"
-	"github.com/golang-common-packages/template/common/service/monitor"
 	"github.com/golang-common-packages/template/common/util/apigroup"
 	"github.com/golang-common-packages/template/common/util/condition"
 )
@@ -46,7 +46,7 @@ var (
 
 func main() {
 	e.Use(middleware.RequestID())
-	//e.Use(middleware.Recover())
+	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	e.Use(middleware.Gzip())
 
@@ -94,7 +94,7 @@ func main() {
 			Password:  conf.Service.Email.Password,
 			SecretKey: conf.Service.Email.Key,
 		}),
-		Monitor:   monitor.NewMonitorStore(monitor.PGO, &conf.Server, &conf.Service),
+		Monitor:   monitoring.New(monitoring.PGO, conf.Server.Name, ""),
 		JWT:       &jwtMiddleware.Client{},
 		Condition: &condition.Client{},
 		Hash:      &hash.Client{},
