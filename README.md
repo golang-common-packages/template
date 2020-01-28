@@ -1,15 +1,13 @@
 ## Service template
 
 # Information
-
 * GoLand
-* Go 1.12.4+
+* Go 1.12.4+ and Go Modules
 * Service run on port 3000 (Port 4040 on docker container)
 * Create config/main.yaml base on main-template.yaml before you run this template
 * Remove unused files and services based on your needs
 
 # Go configs (For Linux)
-
 ````$xslt
 export GOROOT=/usr/local/go
 export GOPATH=~/go
@@ -17,14 +15,13 @@ export GOBIN=${GOPATH}/bin
 export PATH=${PATH}:/usr/local/bin:${GOROOT}/bin:${GOBIN}
 ````
 
-# Google Drive
-
-* Login Azure
-* Download .json
+# Google credential
+* Login Google Develop
+* Download credential (JSON)
 * Setup ENV in GoLand
 * Or with PowerShell:
 ````$xslt
-$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\[USERNAME]\Downloads\[FILE_NAME].json"
+$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\nbxtr\Documents\project\template-golang.json"
 ````
 
 # Debian packages
@@ -81,7 +78,6 @@ sudo make install
 ````
 
 # Generate a self-signed X.509 TLS certificate
-
 Run the following command to generate cert.pem and key.pem files in key folder:
 ````$xslt
 cd key
@@ -99,25 +95,21 @@ docker run -d -p 4040:3000 --name backend-golang backend-golang:latest
 ````
 
 # System troubleshooting
-
-1/ When you has error "cannot unmarshal DNS message" when try to connect to mongodb:
+1/ When you has error "cannot unmarshal DNS message":
 
 * Install the resolvconf package.
-
 ````$xslt
 sudo apt-get purge resolvconf -y
 sudo apt-get install resolvconf -y
 ````
 
 * Edit /etc/resolvconf/resolv.conf.d/head and add the following:
-
 ````$xslt
 nameserver 8.8.4.4
 nameserver 8.8.8.8
 ````
 
 * Restart the resolvconf service.
-
 ````$xslt
 sudo service resolvconf restart
 ````
