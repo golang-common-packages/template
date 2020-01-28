@@ -76,7 +76,7 @@ func (h *Handler) register() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
-		otp := h.OTP.NewOTP(h.Config.Token.OTP.SecretKey)
+		otp := h.OTP.Default(h.Config.Token.OTP.SecretKey).Now()
 		log.Printf("####################################")
 		log.Printf("[Debug Mode] The OTP code is: " + otp)
 		log.Printf("####################################")

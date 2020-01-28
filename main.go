@@ -16,6 +16,7 @@ import (
 	"github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
+	"github.com/golang-common-packages/otp"
 
 	"github.com/golang-common-packages/template/config"
 	"github.com/golang-common-packages/template/model"
@@ -31,10 +32,8 @@ import (
 	"github.com/golang-common-packages/template/common/service/datastore"
 	"github.com/golang-common-packages/template/common/service/logger"
 	"github.com/golang-common-packages/template/common/service/monitor"
-
 	"github.com/golang-common-packages/template/common/util/apigroup"
 	"github.com/golang-common-packages/template/common/util/condition"
-	"github.com/golang-common-packages/template/common/util/otp"
 )
 
 var (
