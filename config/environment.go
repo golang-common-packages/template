@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/golang-common-packages/template/common/service/datastore"
-	"github.com/golang-common-packages/template/common/util/condition"
 	"github.com/golang-common-packages/template/model"
 
 	"github.com/golang-common-packages/caching"
@@ -16,14 +15,13 @@ import (
 
 // Environment model for variable environment
 type Environment struct {
-	Config    *model.Root
-	Database  datastore.Datastore
-	Cache     caching.ICaching
-	Storage   cloudStorage.Filestore
-	Email     email.IMailClient
-	Monitor   monitoring.IMonitoring
-	JWT       jwtMiddleware.Assertion
-	Condition condition.Storage
-	Hash      hash.IHash
-	OTP       otp.IOTP
+	Config   *model.Root
+	Database datastore.Datastore
+	Cache    caching.ICaching
+	Storage  cloudStorage.Filestore
+	Email    email.IMailClient
+	Monitor  monitoring.IMonitoring
+	JWT      jwtMiddleware.Assertion
+	Hash     hash.IHash
+	OTP      otp.IOTP
 }

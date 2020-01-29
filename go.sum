@@ -88,6 +88,8 @@ github.com/golang-common-packages/email v0.0.0-20200118103012-d693cedebb7b h1:F6
 github.com/golang-common-packages/email v0.0.0-20200118103012-d693cedebb7b/go.mod h1:ulbSmJ90MDxPEXct1rmDJjpQyRGoTSeZEQ7aN56bQvQ=
 github.com/golang-common-packages/hash v0.0.0-20200119060028-8ea9b76f8a26 h1:CCKsJp/FKIyHLRo/FFBYpt2VmLVnz4QLYDCOsFQ1FMQ=
 github.com/golang-common-packages/hash v0.0.0-20200119060028-8ea9b76f8a26/go.mod h1:0JvieMtxIZO0VrJtgloaaHfNBQ2YsnSLppu//qkPsPM=
+github.com/golang-common-packages/log v0.0.0-20200129110733-ab950325c1a6 h1:jmrsEjUQ8RYHDBL5SfQJ16IQIIcTeTj0M5QAWWxs58Q=
+github.com/golang-common-packages/log v0.0.0-20200129110733-ab950325c1a6/go.mod h1:rWAQAA+39zIUxXx4zCWDfIm9zNVhKPReuAiBzr8wwYw=
 github.com/golang-common-packages/monitoring v0.0.0-20200128121100-fbde2762cadb h1:lat/qxC4tkmXsiLVNWfbPG3X07DlLcZ8iNqDFjhj/hg=
 github.com/golang-common-packages/monitoring v0.0.0-20200128121100-fbde2762cadb/go.mod h1:7T5e3+gTwsuy17jn6VM6/FgWWIOKrw6X2DhTYzaU5YI=
 github.com/golang-common-packages/otp v0.0.0-20200128034034-0a3fb9d1e1c7 h1:khPuWGlfOwwIX8ChBNe709VySsgwRvBSsqTnS7ReAvM=
@@ -157,6 +159,8 @@ github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxv
 github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515/go.mod h1:+0opPa2QZZtGFBFZlji/RkVcI2GknAs/DXo4wKdlNEc=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
+github.com/kr/pretty v0.2.0 h1:s5hAObm+yFO5uHYt5dYjxi2rXrsnmRpJx4OYvIWUaQs=
+github.com/kr/pretty v0.2.0/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfnI=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=

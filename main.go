@@ -16,6 +16,7 @@ import (
 	"github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
+	"github.com/golang-common-packages/log"
 	"github.com/golang-common-packages/monitoring"
 	"github.com/golang-common-packages/otp"
 
@@ -31,53 +32,20 @@ import (
 	"github.com/golang-common-packages/template/handler/user"
 
 	"github.com/golang-common-packages/template/common/service/datastore"
-	"github.com/golang-common-packages/template/common/service/logger"
 	"github.com/golang-common-packages/template/common/util/apigroup"
-	"github.com/golang-common-packages/template/common/util/condition"
 )
 
 var (
 	e         = echo.New()
 	wg        sync.WaitGroup
 	conf      = config.Load("backend-golang")
-	logClient = logger.NewLoggerstore(logger.FLUENT, &conf.Server, &conf.Service)
-	// messageQueue = stream.NewStreamClient(stream.RABBITMQ, &conf.Service)
-)
-
-func main() {
-	e.Use(middleware.RequestID())
-	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
-	e.Use(middleware.Gzip())
-
-	e.Use(middleware.LoggerWithConfig(
-		middleware.LoggerConfig{ // add uuid header to log
-			Format: `{"level":"info","time":"${time_rfc3339_nano}","id":"${id}","remote_ip":"${remote_ip}","host":"${host}",` +
-				`"method":"${method}","uri":"${uri}","status":${status},"error":"${error}","latency":${latency},` +
-				`"latency_human":"${latency_human}","bytes_in":${bytes_in},` +
-				`"bytes_out":${bytes_out},"uuid":"${header:uuid}"}` + "\n",
-			Output: logClient,
-		},
-	))
-
-	// // Message Queue testing
-	// c := make(chan string)
-	// r := messageQueue.NewConsumerStore()
-	// r.Consumer("topic", c)
-	// p := messageQueue.NewProducerStore()
-	// p.Producer("topic", "hello")
-
-	// go func() {
-	// 	for msg := range c {
-	// 		log.Println("msg: ", msg)
-	// 	}
-	// }()
-
-	// Setup API Group
-	apiGroup := e.Group(apigroup.SetAPIGroup(conf.Server.Name, conf.Server.Version))
-
-	// Setup environment variable
-	var env = &config.Environment{
+	logClient = log.New(false, log.FLUENT, &log.Fluent{
+		Tag:    conf.Service.Fluent.Tag,
+		Host:   conf.Service.Fluent.Host,
+		Port:   conf.Service.Fluent.Port,
+		Prefix: conf.Service.Fluent.Prefix,
+	})
+	env = &config.Environment{
 		Config:   &conf,
 		Database: datastore.NewDatastore(datastore.MONGODB, &conf.Service),
 		Cache: caching.New(caching.REDIS, &caching.CachingConfig{Redis: caching.Redis{
@@ -94,12 +62,34 @@ func main() {
 			Password:  conf.Service.Email.Password,
 			SecretKey: conf.Service.Email.Key,
 		}),
-		Monitor:   monitoring.New(monitoring.PGO, conf.Server.Name, ""),
-		JWT:       &jwtMiddleware.Client{},
-		Condition: &condition.Client{},
-		Hash:      &hash.Client{},
-		OTP:       &otp.Client{},
-	} // API routing
+		Monitor: monitoring.New(monitoring.PGO, conf.Server.Name, ""),
+		JWT:     &jwtMiddleware.Client{},
+		Hash:    &hash.Client{},
+		OTP:     &otp.Client{},
+	}
+)
+
+func main() {
+	e.Use(middleware.RequestID())
+	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
+	e.Use(middleware.Gzip())
+
+	// Apply log service to echo
+	e.Use(middleware.LoggerWithConfig(
+		middleware.LoggerConfig{ // add uuid header to log
+			Format: `{"level":"info","time":"${time_rfc3339_nano}","id":"${id}","remote_ip":"${remote_ip}","host":"${host}",` +
+				`"method":"${method}","uri":"${uri}","status":${status},"error":"${error}","latency":${latency},` +
+				`"latency_human":"${latency_human}","bytes_in":${bytes_in},` +
+				`"bytes_out":${bytes_out},"uuid":"${header:uuid}"}` + "\n",
+			Output: logClient,
+		},
+	))
+
+	// Setup API Group
+	apiGroup := e.Group(apigroup.SetAPIGroup(conf.Server.Name, conf.Server.Version))
+
+	// API routing
 	healthcheck.New(env).Handler(apiGroup)
 	login.New(env).Handler(apiGroup)
 	logout.New(env).Handler(apiGroup)
