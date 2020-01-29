@@ -32,7 +32,6 @@ import (
 	"github.com/golang-common-packages/template/handler/user"
 
 	"github.com/golang-common-packages/template/common/service/datastore"
-	"github.com/golang-common-packages/template/common/util/apigroup"
 )
 
 var (
@@ -87,7 +86,7 @@ func main() {
 	))
 
 	// Setup API Group
-	apiGroup := e.Group(apigroup.SetAPIGroup(conf.Server.Name, conf.Server.Version))
+	apiGroup := e.Group("/api/" + conf.Server.Version)
 
 	// API routing
 	healthcheck.New(env).Handler(apiGroup)
