@@ -1,13 +1,12 @@
 package login
 
 import (
-	"log"
-	"net/http"
-	"time"
-
 	"github.com/golang-common-packages/template/config"
 	"github.com/golang-common-packages/template/model"
 	"github.com/labstack/echo/v4"
+	"log"
+	"net/http"
+	"time"
 )
 
 // Handler manage all request and dependency
@@ -22,7 +21,7 @@ func New(env *config.Environment) *Handler {
 
 // Handler register all path to echo.Echo
 func (h *Handler) Handler(e *echo.Group) {
-	e.POST("/login", h.login(), h.Monitor.Middleware())
+	e.POST("/login", h.login())
 }
 
 func (h *Handler) login() echo.HandlerFunc {
@@ -33,11 +32,19 @@ func (h *Handler) login() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 		// Query user from DB by username
-		user, err := h.Database.GetUser(requestBody.Username)
+		result, err := h.DB.GetByField("backend-golang", "user", "username", requestBody.Username, model.User{})
+		//user, err := h.Database.GetUser(requestBody.Username)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusNotFound, err)
 		}
+
+		user, ok := result.(model.User)
+		if !ok {
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
 		if h.Hash.SHA512(requestBody.Password) == *user.Password && user.IsActive == true {
+			user.Password = nil
 			accessToken, refreshToken, err := h.JWT.CreateNewTokens(h.Config.Token.Accesstoken.PrivateKey, h.Config.Token.Refreshtoken.PrivateKey, user.Email, "normal", h.Config.Token.Accesstoken.JWTTimeout, true)
 			if err != nil {
 				return echo.NewHTTPError(http.StatusInternalServerError, err)

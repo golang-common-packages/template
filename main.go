@@ -31,6 +31,7 @@ import (
 	"github.com/golang-common-packages/template/handler/refreshtoken"
 	"github.com/golang-common-packages/template/handler/user"
 
+	"github.com/golang-common-packages/template/common/service/database"
 	"github.com/golang-common-packages/template/common/service/datastore"
 )
 
@@ -47,6 +48,13 @@ var (
 	env = &config.Environment{
 		Config:   &conf,
 		Database: datastore.NewDatastore(datastore.MONGODB, &conf.Service),
+		DB: database.NewDatabase(database.MONGODB, &database.Database{MongoDB: database.MongoDB{
+			User:     conf.Service.Database.MongoDB.User,
+			Password: conf.Service.Database.MongoDB.Password,
+			Hosts:    conf.Service.Database.MongoDB.Hosts,
+			Options:  conf.Service.Database.MongoDB.Options,
+			DB:       conf.Service.Database.MongoDB.DB,
+		}}),
 		Cache: caching.New(caching.REDIS, &caching.CachingConfig{Redis: caching.Redis{
 			Prefix:   conf.Service.Database.Redis.Prefix,
 			Password: conf.Service.Database.Redis.Password,
@@ -70,7 +78,7 @@ var (
 
 func main() {
 	e.Use(middleware.RequestID())
-	e.Use(middleware.Recover())
+	//e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	e.Use(middleware.Gzip())
 

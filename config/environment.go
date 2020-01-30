@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/golang-common-packages/template/common/service/database"
 	"github.com/golang-common-packages/template/common/service/datastore"
 	"github.com/golang-common-packages/template/model"
 
@@ -17,6 +18,7 @@ import (
 type Environment struct {
 	Config   *model.Root
 	Database datastore.Datastore
+	DB       database.IDatabase
 	Cache    caching.ICaching
 	Storage  cloudStorage.Filestore
 	Email    email.IMailClient
