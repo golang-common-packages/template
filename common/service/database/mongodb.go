@@ -1,15 +1,14 @@
 package database
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/golang-common-packages/template/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -132,23 +131,26 @@ func (m *MongoClient) GetALL(databaseName, collectionName, lastID, pageSize stri
 }
 
 // GetByField ...
-func (m *MongoClient) GetByField(databaseName, collectionName, field, value string, dataModel model.User) (interface{}, error) {
+func (m *MongoClient) GetByField(databaseName, collectionName, field, value string, dataModel reflect.Type) (result interface{}, err error) {
 	session := m.createSession()
 	defer session.EndSession(ctx)
 
-	if err := mongo.WithSession(ctx, session, func(sc mongo.SessionContext) (err error) {
-		tempResult := bson.M{} // Check this: https://jira.mongodb.org/browse/GODRIVER-988
+	if err = mongo.WithSession(ctx, session, func(sc mongo.SessionContext) (err error) {
 		filter := bson.M{
 			field: value,
 		}
 
 		collection := m.Client.Database(databaseName).Collection(collectionName)
-		if err = collection.FindOne(ctx, filter).Decode(&tempResult); err != nil {
-			return err
+		SR := collection.FindOne(ctx, filter)
+		if SR.Err() != nil {
+			return SR.Err()
 		}
 
-		obj, _ := json.Marshal(tempResult)
-		err = json.Unmarshal(obj, &dataModel)
+		result = reflect.New(dataModel).Interface()
+		err = SR.Decode(result)
+		if err == nil {
+			return err
+		}
 
 		return nil
 	}); err != nil {
@@ -156,7 +158,7 @@ func (m *MongoClient) GetByField(databaseName, collectionName, field, value stri
 		return nil, err
 	}
 
-	return dataModel, nil
+	return result, nil
 }
 
 // Create ...

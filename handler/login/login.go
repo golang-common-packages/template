@@ -1,12 +1,15 @@
 package login
 
 import (
-	"github.com/golang-common-packages/template/config"
-	"github.com/golang-common-packages/template/model"
-	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
+	"reflect"
 	"time"
+
+	"github.com/labstack/echo/v4"
+
+	"github.com/golang-common-packages/template/config"
+	"github.com/golang-common-packages/template/model"
 )
 
 // Handler manage all request and dependency
@@ -32,13 +35,12 @@ func (h *Handler) login() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
 		// Query user from DB by username
-		result, err := h.DB.GetByField("backend-golang", "user", "username", requestBody.Username, model.User{})
-		//user, err := h.Database.GetUser(requestBody.Username)
+		result, err := h.DB.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", requestBody.Username, reflect.TypeOf(model.User{}))
 		if err != nil {
 			return echo.NewHTTPError(http.StatusNotFound, err)
 		}
 
-		user, ok := result.(model.User)
+		user, ok := result.(*model.User)
 		if !ok {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
