@@ -41,7 +41,7 @@ func (h *Handler) Handler(e *echo.Group) {
 // localhost:3000/api/v1/document?limit=3&lastid=5cee0e7af554bfbe838882c2
 func (h *Handler) list() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		results, err := h.DB.GetALL(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.Document, c.QueryParam("lastid"), c.QueryParam("limit"), reflect.TypeOf(model.Document{}))
+		results, err := h.Database.GetALL(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.Document, c.QueryParam("lastid"), c.QueryParam("limit"), reflect.TypeOf(model.Document{}))
 		if err != nil {
 			return echo.NewHTTPError(http.StatusNotFound, err)
 		}
@@ -71,7 +71,7 @@ func (h *Handler) save() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		_, err := h.DB.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.Document, request)
+		_, err := h.Database.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.Document, request)
 		if err != nil {
 			log.Printf("Can not store to database in save document hanlder: %s", err.Error())
 			return c.NoContent(http.StatusInternalServerError)

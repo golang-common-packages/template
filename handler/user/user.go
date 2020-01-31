@@ -37,7 +37,7 @@ func (h *Handler) Handler(e *echo.Group) {
 func (h *Handler) list() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		if c.QueryParam("username") != "" {
-			result, err := h.DB.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", c.QueryParam("username"), reflect.TypeOf(model.User{}))
+			result, err := h.Database.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", c.QueryParam("username"), reflect.TypeOf(model.User{}))
 			if err != nil {
 				return echo.NewHTTPError(http.StatusNotFound, err)
 			}
@@ -51,7 +51,7 @@ func (h *Handler) list() echo.HandlerFunc {
 			return c.JSON(http.StatusOK, user)
 		}
 
-		results, err := h.DB.GetALL(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, c.QueryParam("lastid"), c.QueryParam("limit"), reflect.TypeOf(model.UserResult{}))
+		results, err := h.Database.GetALL(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, c.QueryParam("lastid"), c.QueryParam("limit"), reflect.TypeOf(model.UserResult{}))
 		if err != nil {
 			return echo.NewHTTPError(http.StatusNotFound, err)
 		}
@@ -84,7 +84,7 @@ func (h *Handler) register() echo.HandlerFunc {
 		*request.Password = h.Hash.SHA512(*request.Password)
 		request.IsActive = false
 
-		_, err := h.DB.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, request)
+		_, err := h.Database.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, request)
 		if err != nil {
 			log.Printf("Can not store to database in register hanlder: %s", err.Error())
 			return c.NoContent(http.StatusInternalServerError)
@@ -125,7 +125,7 @@ func (h *Handler) active() echo.HandlerFunc {
 		}
 
 		// Get User info by username and change info
-		result, err := h.DB.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", username, reflect.TypeOf(model.User{}))
+		result, err := h.Database.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", username, reflect.TypeOf(model.User{}))
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err)
 		}
@@ -139,7 +139,7 @@ func (h *Handler) active() echo.HandlerFunc {
 		user.IsActive = true
 
 		// Update new User info to database
-		_, err = h.DB.Update(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, user.ID, user)
+		_, err = h.Database.Update(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, user.ID, user)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err)
 		}

@@ -32,7 +32,7 @@ func (h *Handler) refreshtoken() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		result, err := h.DB.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", request.Username, reflect.TypeOf(model.User{}))
+		result, err := h.Database.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", request.Username, reflect.TypeOf(model.User{}))
 		if err != nil {
 			return echo.NewHTTPError(http.StatusNotFound, err)
 		}

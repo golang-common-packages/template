@@ -13,6 +13,7 @@ import (
 
 	"github.com/golang-common-packages/caching"
 	"github.com/golang-common-packages/cloud-storage"
+	"github.com/golang-common-packages/database"
 	"github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
@@ -30,9 +31,6 @@ import (
 	"github.com/golang-common-packages/template/handler/metrics"
 	"github.com/golang-common-packages/template/handler/refreshtoken"
 	"github.com/golang-common-packages/template/handler/user"
-
-	"github.com/golang-common-packages/template/common/service/database"
-	"github.com/golang-common-packages/template/common/service/datastore"
 )
 
 var (
@@ -46,9 +44,8 @@ var (
 		Prefix: conf.Service.Fluent.Prefix,
 	})
 	env = &config.Environment{
-		Config:   &conf,
-		Database: datastore.NewDatastore(datastore.MONGODB, &conf.Service),
-		DB: database.NewDatabase(database.MONGODB, &database.Database{MongoDB: database.MongoDB{
+		Config: &conf,
+		Database: database.NewDatabase(database.MONGODB, &database.Database{MongoDB: database.MongoDB{
 			User:     conf.Service.Database.MongoDB.User,
 			Password: conf.Service.Database.MongoDB.Password,
 			Hosts:    conf.Service.Database.MongoDB.Hosts,
