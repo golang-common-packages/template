@@ -24,7 +24,7 @@ func New(env *config.Environment) *Handler {
 
 // Handler register all path to echo.Echo
 func (h *Handler) Handler(e *echo.Group) {
-	e.POST("/login", h.login())
+	e.POST("/login", h.login(), h.Monitor.Middleware())
 }
 
 func (h *Handler) login() echo.HandlerFunc {
@@ -34,7 +34,7 @@ func (h *Handler) login() echo.HandlerFunc {
 		if err := c.Bind(requestBody); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err)
 		}
-		// Query user from DB by username
+
 		result, err := h.DB.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", requestBody.Username, reflect.TypeOf(model.User{}))
 		if err != nil {
 			return echo.NewHTTPError(http.StatusNotFound, err)

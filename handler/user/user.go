@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -36,18 +37,30 @@ func (h *Handler) Handler(e *echo.Group) {
 func (h *Handler) list() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		if c.QueryParam("username") != "" {
-			user, err := h.Database.GetUser(c.QueryParam("username"))
+			result, err := h.DB.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", c.QueryParam("username"), reflect.TypeOf(model.User{}))
 			if err != nil {
-				return echo.NewHTTPError(http.StatusInternalServerError, err)
+				return echo.NewHTTPError(http.StatusNotFound, err)
 			}
-			user.Password = nil // Remove password
+
+			user, ok := result.(*model.User)
+			if !ok {
+				return echo.NewHTTPError(http.StatusInternalServerError)
+			}
+
+			user.Password = nil
 			return c.JSON(http.StatusOK, user)
 		}
 
-		users, err := h.Database.GetUsers(c.QueryParam("lastid"), c.QueryParam("limit"))
+		results, err := h.DB.GetALL(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, c.QueryParam("lastid"), c.QueryParam("limit"), reflect.TypeOf(model.UserResult{}))
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusNotFound, err)
 		}
+
+		users, ok := results.(*[]model.UserResult)
+		if !ok {
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+		//fmt.Println((*users)[0])
 
 		return c.JSON(http.StatusOK, users)
 	}
@@ -71,9 +84,10 @@ func (h *Handler) register() echo.HandlerFunc {
 		*request.Password = h.Hash.SHA512(*request.Password)
 		request.IsActive = false
 
-		if err := h.Database.SaveUser(request); err != nil {
+		_, err := h.DB.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, request)
+		if err != nil {
 			log.Printf("Can not store to database in user hanlder: %s", err.Error())
-			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+			return c.NoContent(http.StatusInternalServerError)
 		}
 
 		otp := h.OTP.Default(h.Config.Token.OTP.SecretKey).Now()
@@ -110,9 +124,24 @@ func (h *Handler) active() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusBadRequest, errors.New("OTP does not exist"))
 		}
 
-		if err := h.Database.ActiveUser(username); err != nil {
-			log.Printf("Can not store to database in user hanlder: %s", err.Error())
-			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		// Get User info by username and change info
+		result, err := h.DB.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", username, reflect.TypeOf(model.User{}))
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		}
+
+		user, ok := result.(*model.User)
+		if !ok {
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
+		user.Updated = time.Now()
+		user.IsActive = true
+
+		// Update new User info to database
+		_, err = h.DB.Update(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, user.ID, user)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
 		}
 
 		// Delete opt in Redis

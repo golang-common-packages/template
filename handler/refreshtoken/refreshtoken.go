@@ -2,6 +2,7 @@ package refreshtoken
 
 import (
 	"net/http"
+	"reflect"
 
 	"github.com/golang-common-packages/template/config"
 	"github.com/golang-common-packages/template/model"
@@ -31,10 +32,14 @@ func (h *Handler) refreshtoken() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		// Query user from DB by username
-		user, err := h.Database.GetUser(request.Username)
+		result, err := h.DB.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", request.Username, reflect.TypeOf(model.User{}))
 		if err != nil {
-			return echo.NewHTTPError(http.StatusUnauthorized, err)
+			return echo.NewHTTPError(http.StatusNotFound, err)
+		}
+
+		user, ok := result.(*model.User)
+		if !ok {
+			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
 		if user.Username != request.Username {

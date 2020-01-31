@@ -11,7 +11,7 @@ type GetUserByQueryString struct {
 	Limit    string `json:"limit" query:"limit"`
 }
 
-// User store infomation for user
+// User model work with database
 type User struct {
 	ID         interface{} `json:"id" bson:"_id" gorm:"unique;type:int; primary_key"`
 	Name       string      `json:"name,omitempty" bson:"name,omitempty" validate:"required" gorm:"column:name"`
@@ -23,6 +23,17 @@ type User struct {
 	Created    time.Time   `json:"created,omitempty" bson:"created,omitempty" gorm:"column:created"`
 	Updated    time.Time   `json:"updated,omitempty" bson:"updated,omitempty" gorm:"column:updated"`
 	Expiration time.Time   `json:"expiration,omitempty" bson:"expiration,omitempty" gorm:"column:expiration"`
+}
+
+// UserResult model for api response
+type UserResult struct {
+	ID       interface{} `json:"id" bson:"_id" gorm:"unique;type:int; primary_key"`
+	Name     string      `json:"name,omitempty" bson:"name,omitempty" validate:"required" gorm:"column:name"`
+	Age      int         `json:"age,omitempty" bson:"age,omitempty" gorm:"column:age"`
+	Username string      `json:"username,omitempty" bson:"username,omitempty" gorm:"unique_index;column:username"`
+	Email    string      `json:"email,omitempty" bson:"email,omitempty" gorm:"unique_index;column:email"`
+	IsActive bool        `json:"isactive" bson:"isactive" gorm:"column:is_active"`
+	Created  time.Time   `json:"created,omitempty" bson:"created,omitempty" gorm:"column:created"`
 }
 
 func (User *User) TableName() string {

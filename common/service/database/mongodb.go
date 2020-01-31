@@ -75,22 +75,25 @@ func (m *MongoClient) createSession() (session mongo.Session) {
 }
 
 // GetALL ...
-func (m *MongoClient) GetALL(databaseName, collectionName, lastID, pageSize string, dataModel interface{}) (results []interface{}, err error) {
+func (m *MongoClient) GetALL(databaseName, collectionName, lastID, pageSize string, dataModel reflect.Type) (results interface{}, err error) {
 	session := m.createSession()
 	defer session.EndSession(ctx)
 
-	if collectionName == "" && lastID == "" && pageSize == "" {
-		return nil, errors.New("collectionName, lastID and pageSize must not empty")
-	}
+	//if collectionName == "" && lastID == "" && pageSize == "" {
+	//	return nil, errors.New("collectionName, lastID and pageSize must not empty")
+	//}
 
 	if err = mongo.WithSession(ctx, session, func(sc mongo.SessionContext) (err error) {
-		id, err := primitive.ObjectIDFromHex(lastID)
-		if err != nil {
-			fmt.Printf("%d can not convert to ObjectID", id)
-		}
+		filter := bson.M{}
+		if lastID != "" {
+			id, err := primitive.ObjectIDFromHex(lastID)
+			if err != nil {
+				fmt.Printf("%d can not convert to ObjectID", id)
+			}
 
-		filter := bson.M{
-			"_id": bson.M{"$gt": id},
+			filter = bson.M{
+				"_id": bson.M{"$gt": id},
+			}
 		}
 
 		// Convert pageSize from string to int64
@@ -111,13 +114,10 @@ func (m *MongoClient) GetALL(databaseName, collectionName, lastID, pageSize stri
 		}
 
 		// Decode cursor
-		for cur.Next(ctx) {
-			if err := cur.Decode(&dataModel); err != nil {
-				return err
-			}
-			results = append(results, dataModel)
-		}
-		if err = cur.Err(); err != nil {
+		dataModel := reflect.Zero(reflect.SliceOf(dataModel)).Type()
+		results = reflect.New(dataModel).Interface()
+		err = cur.All(ctx, results)
+		if err != nil {
 			return err
 		}
 
@@ -127,7 +127,7 @@ func (m *MongoClient) GetALL(databaseName, collectionName, lastID, pageSize stri
 		return nil, err
 	}
 
-	return nil, nil
+	return results, nil
 }
 
 // GetByField ...
@@ -175,7 +175,7 @@ func (m *MongoClient) Create(databaseName, collectionName string, dataModel inte
 
 		return nil
 	}); err != nil {
-		log.Println("Error when try to use with session at SaveUser function: ", err)
+		log.Println("Error when try to use with session at Create method: ", err)
 		return nil, err
 	}
 
