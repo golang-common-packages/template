@@ -1,11 +1,11 @@
 package logout
 
 import (
-	"log"
 	"net/http"
 
-	"github.com/golang-common-packages/template/config"
 	"github.com/labstack/echo/v4"
+
+	"github.com/golang-common-packages/template/config"
 )
 
 // Handler manage all request and dependency
@@ -26,17 +26,16 @@ func (h *Handler) Handler(e *echo.Group) {
 // Logout function will handle login request
 func (h *Handler) Logout() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		accesstoken := c.Request().Header.Get(echo.HeaderAuthorization)
-		key := h.Hash.SHA512(accesstoken)
+		accessToken := c.Request().Header.Get(echo.HeaderAuthorization)
+		key := h.Hash.SHA512(accessToken)
 
 		val, err := h.Cache.Get(key)
 		if err != nil {
-			log.Printf("Can not delete accesstoken from redis in logout handler: %s", err.Error())
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 		if val != "" {
 			if err := h.Cache.Delete(key); err != nil {
-				return c.NoContent(http.StatusNotFound)
+				return c.NoContent(http.StatusUnauthorized)
 			}
 		}
 

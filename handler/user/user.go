@@ -1,7 +1,6 @@
 package user
 
 import (
-	"errors"
 	"log"
 	"net/http"
 	"reflect"
@@ -39,12 +38,12 @@ func (h *Handler) list() echo.HandlerFunc {
 		if c.QueryParam("username") != "" {
 			result, err := h.Database.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", c.QueryParam("username"), reflect.TypeOf(model.User{}))
 			if err != nil {
-				return echo.NewHTTPError(http.StatusNotFound, err)
+				return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 			}
 
 			user, ok := result.(*model.User)
 			if !ok {
-				return echo.NewHTTPError(http.StatusInternalServerError)
+				return echo.NewHTTPError(http.StatusInternalServerError, "Can not bind the result to model")
 			}
 
 			user.Password = nil
@@ -53,12 +52,12 @@ func (h *Handler) list() echo.HandlerFunc {
 
 		results, err := h.Database.GetALL(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, c.QueryParam("lastid"), c.QueryParam("limit"), reflect.TypeOf(model.UserResult{}))
 		if err != nil {
-			return echo.NewHTTPError(http.StatusNotFound, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		users, ok := results.(*[]model.UserResult)
 		if !ok {
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return echo.NewHTTPError(http.StatusInternalServerError, "Can not bind the result to model")
 		}
 		//fmt.Println((*users)[0])
 
@@ -84,10 +83,9 @@ func (h *Handler) register() echo.HandlerFunc {
 		*request.Password = h.Hash.SHA512(*request.Password)
 		request.IsActive = false
 
-		_, err := h.Database.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, request)
+		result, err := h.Database.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, request)
 		if err != nil {
-			log.Printf("Can not store to database in register hanlder: %s", err.Error())
-			return c.NoContent(http.StatusInternalServerError)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		otp := h.OTP.Default(h.Config.Token.OTP.SecretKey).Now()
@@ -97,16 +95,15 @@ func (h *Handler) register() echo.HandlerFunc {
 
 		// Save OTP token to redis with pattern: (hash521(otp), username)
 		if err := h.Cache.Set(h.Hash.SHA512(otp), request.Username, time.Duration(h.Config.Token.OTP.Timeout)*time.Minute); err != nil {
-			log.Printf("Can not store to redis in user hanlder: %s", err.Error())
-			return c.NoContent(http.StatusInternalServerError)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		// Send OTP via email
 		if err := h.Email.Send(h.Config.Service.Email.From, request.Email, h.Config.Service.Email.Subject+h.Config.Server.Name, h.Config.Service.Email.Message+otp); err != nil {
-			log.Printf("Can not sent mail in user handler: %s", err.Error())
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
-		return c.NoContent(http.StatusCreated)
+
+		return c.JSON(http.StatusOK, result)
 	}
 }
 
@@ -115,33 +112,33 @@ func (h *Handler) active() echo.HandlerFunc {
 		otp := c.Param("otp")
 
 		if len(otp) == 0 {
-			return echo.NewHTTPError(http.StatusBadRequest, errors.New("OTP does not exist in the request"))
+			return echo.NewHTTPError(http.StatusBadRequest, "OTP does not exist in the request")
 		}
 
 		// Get otp code from Redis, that is stored from register API
 		username, err := h.Cache.Get(h.Hash.SHA512(otp))
 		if err != nil { // Not found otp on Redis
-			return echo.NewHTTPError(http.StatusBadRequest, errors.New("OTP does not exist"))
+			return echo.NewHTTPError(http.StatusBadRequest, "OTP does not exist")
 		}
 
 		// Get User info by username and change info
 		result, err := h.Database.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", username, reflect.TypeOf(model.User{}))
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		user, ok := result.(*model.User)
 		if !ok {
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return echo.NewHTTPError(http.StatusInternalServerError, "Can not bind the result to model")
 		}
 
 		user.Updated = time.Now()
 		user.IsActive = true
 
 		// Update new User info to database
-		_, err = h.Database.Update(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, user.ID, user)
+		result, err = h.Database.Update(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, user.ID, user)
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		// Delete opt in Redis
@@ -150,6 +147,6 @@ func (h *Handler) active() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
-		return c.NoContent(http.StatusOK)
+		return c.JSON(http.StatusOK, result)
 	}
 }

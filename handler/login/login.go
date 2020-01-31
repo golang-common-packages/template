@@ -1,7 +1,6 @@
 package login
 
 import (
-	"log"
 	"net/http"
 	"reflect"
 	"time"
@@ -32,31 +31,30 @@ func (h *Handler) login() echo.HandlerFunc {
 		// Map request body to struct
 		requestBody := new(model.LoginInfo)
 		if err := c.Bind(requestBody); err != nil {
-			return echo.NewHTTPError(http.StatusBadRequest, err)
+			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
 		result, err := h.Database.GetByField(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, "username", requestBody.Username, reflect.TypeOf(model.User{}))
 		if err != nil {
-			return echo.NewHTTPError(http.StatusNotFound, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		user, ok := result.(*model.User)
 		if !ok {
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return echo.NewHTTPError(http.StatusInternalServerError, "Can not bind result to model")
 		}
 
 		if h.Hash.SHA512(requestBody.Password) == *user.Password && user.IsActive == true {
 			user.Password = nil
 			accessToken, refreshToken, err := h.JWT.CreateNewTokens(h.Config.Token.Accesstoken.PrivateKey, h.Config.Token.Refreshtoken.PrivateKey, user.Email, "normal", h.Config.Token.Accesstoken.JWTTimeout, true)
 			if err != nil {
-				return echo.NewHTTPError(http.StatusInternalServerError, err)
+				return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 			}
 
 			// Save access token to redis with pattern: (sha512(token), sha512(username+token))
 			err = h.Cache.Set(h.Hash.SHA512(accessToken), h.Hash.SHA512(user.Username+accessToken), time.Hour*time.Duration(h.Config.Token.Accesstoken.JWTTimeout))
 			if err != nil {
-				log.Printf("Can not save access token to redis in login handler: %s", err.Error())
-				return echo.NewHTTPError(http.StatusInternalServerError)
+				return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 			}
 
 			return c.JSON(http.StatusOK, echo.Map{

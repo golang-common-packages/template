@@ -3,7 +3,6 @@ package document
 import (
 	"bytes"
 	"io"
-	"log"
 	"net/http"
 	"reflect"
 
@@ -30,11 +29,10 @@ func New(env *config.Environment) *Handler {
 func (h *Handler) Handler(e *echo.Group) {
 	e.GET("/document", h.list(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
 	e.POST("/document", h.save(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
-	e.GET("/drive", h.files())
-	// e.GET("/drive", driveController.List())
-	e.POST("/drive", h.upload())
-	e.DELETE("/drive", h.delete())
-	e.GET("/drive/donwload", h.donwload())
+	e.GET("/drive", h.files(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
+	e.POST("/drive", h.upload(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
+	e.DELETE("/drive", h.delete(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
+	e.GET("/drive/donwload", h.donwload(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
 }
 
 // localhost:3000/api/v1/document?limit=3
@@ -43,12 +41,12 @@ func (h *Handler) list() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		results, err := h.Database.GetALL(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.Document, c.QueryParam("lastid"), c.QueryParam("limit"), reflect.TypeOf(model.Document{}))
 		if err != nil {
-			return echo.NewHTTPError(http.StatusNotFound, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		documents, ok := results.(*[]model.Document)
 		if !ok {
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return echo.NewHTTPError(http.StatusInternalServerError, "Can not bind the result to model")
 		}
 		//fmt.Println((*documents)[0])
 
@@ -71,13 +69,12 @@ func (h *Handler) save() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		_, err := h.Database.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.Document, request)
+		result, err := h.Database.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.Document, request)
 		if err != nil {
-			log.Printf("Can not store to database in save document hanlder: %s", err.Error())
-			return c.NoContent(http.StatusInternalServerError)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
-		return c.NoContent(http.StatusOK)
+		return c.JSON(http.StatusOK, result)
 	}
 }
 
@@ -86,7 +83,7 @@ func (h *Handler) files() echo.HandlerFunc {
 		fileInfo := &cloudStorage.FileModel{Path: ""}
 		files, err := h.Storage.List(fileInfo)
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		return c.JSON(http.StatusOK, files)
@@ -101,18 +98,18 @@ func (h *Handler) upload() echo.HandlerFunc {
 
 		file, err := c.FormFile("file")
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		src, err := file.Open()
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 		defer src.Close()
 
 		buf := bytes.NewBuffer(nil)
 		if _, err := io.Copy(buf, src); err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		// This will return a value of type bytes.Reader which implements the io.Reader (and io.ReadSeeker) interface.
@@ -128,7 +125,7 @@ func (h *Handler) upload() echo.HandlerFunc {
 
 		result, err := h.Storage.Upload(fileInfo)
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		return c.JSON(http.StatusOK, result)
@@ -143,7 +140,7 @@ func (h *Handler) delete() echo.HandlerFunc {
 
 		err := h.Storage.Delete(fileInfo)
 		if err != nil {
-			return echo.NewHTTPError(http.StatusNotFound, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		return c.NoContent(http.StatusOK)
@@ -158,7 +155,7 @@ func (h *Handler) donwload() echo.HandlerFunc {
 
 		files, err := h.Storage.Download(fileInfo)
 		if err != nil {
-			return echo.NewHTTPError(http.StatusNotFound, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 
 		return c.File(files.(string))

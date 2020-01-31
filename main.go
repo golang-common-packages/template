@@ -75,7 +75,7 @@ var (
 
 func main() {
 	e.Use(middleware.RequestID())
-	//e.Use(middleware.Recover())
+	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	e.Use(middleware.Gzip())
 

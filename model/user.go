@@ -1,8 +1,6 @@
 package model
 
-import (
-	"time"
-)
+import "time"
 
 // GetUserByQueryString store query string for user
 type GetUserByQueryString struct {
