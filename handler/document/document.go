@@ -3,7 +3,9 @@ package document
 import (
 	"bytes"
 	"io"
+	"log"
 	"net/http"
+	"reflect"
 
 	"github.com/labstack/echo/v4"
 	"gopkg.in/go-playground/validator.v9"
@@ -39,10 +41,16 @@ func (h *Handler) Handler(e *echo.Group) {
 // localhost:3000/api/v1/document?limit=3&lastid=5cee0e7af554bfbe838882c2
 func (h *Handler) list() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		documents, err := h.Database.GetDocuments(c.QueryParam("lastid"), c.QueryParam("limit"))
+		results, err := h.DB.GetALL(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.Document, c.QueryParam("lastid"), c.QueryParam("limit"), reflect.TypeOf(model.Document{}))
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+			return echo.NewHTTPError(http.StatusNotFound, err)
 		}
+
+		documents, ok := results.(*[]model.Document)
+		if !ok {
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+		//fmt.Println((*documents)[0])
 
 		return c.JSON(http.StatusOK, documents)
 	}
@@ -63,8 +71,10 @@ func (h *Handler) save() echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		if err := h.Database.SaveDocuments(request); err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, err)
+		_, err := h.DB.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.Document, request)
+		if err != nil {
+			log.Printf("Can not store to database in save document hanlder: %s", err.Error())
+			return c.NoContent(http.StatusInternalServerError)
 		}
 
 		return c.NoContent(http.StatusOK)

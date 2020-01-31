@@ -86,7 +86,7 @@ func (h *Handler) register() echo.HandlerFunc {
 
 		_, err := h.DB.Create(h.Config.Service.Database.MongoDB.DB, h.Config.Service.Database.Collection.User, request)
 		if err != nil {
-			log.Printf("Can not store to database in user hanlder: %s", err.Error())
+			log.Printf("Can not store to database in register hanlder: %s", err.Error())
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
