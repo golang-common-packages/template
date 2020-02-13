@@ -52,10 +52,15 @@ var (
 			Options:  conf.Service.Database.MongoDB.Options,
 			DB:       conf.Service.Database.MongoDB.DB,
 		}}),
-		Cache: caching.New(caching.REDIS, &caching.Config{Redis: caching.Redis{
-			Password: conf.Service.Database.Redis.Password,
-			Host:     conf.Service.Database.Redis.Host,
-			DB:       conf.Service.Database.Redis.DB,
+		//Cache: caching.New(caching.REDIS, &caching.Config{Redis: caching.Redis{
+		//	Password: conf.Service.Database.Redis.Password,
+		//	Host:     conf.Service.Database.Redis.Host,
+		//	DB:       conf.Service.Database.Redis.DB,
+		//}}),
+		Cache: caching.New(caching.CUSTOM, &caching.Config{CustomCache: caching.CustomCache{
+			CleaningInterval: 3600000000000,    // nanosecond
+			CacheSize:        10 * 1024 * 1024, // byte
+			SizeChecker:      true,
 		}}),
 		Storage: cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
 		Email: email.NewMailClient(email.SENDGRID, &email.MailConfig{
