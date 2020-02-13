@@ -4,11 +4,9 @@ go 1.13
 
 require (
 	cloud.google.com/go v0.53.0 // indirect
-	github.com/Shopify/sarama v1.25.0 // indirect
+	github.com/allegro/bigcache v1.2.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dropbox/dropbox-sdk-go-unofficial v5.6.0+incompatible // indirect
-	github.com/eclipse/paho.mqtt.golang v1.2.0 // indirect
-	github.com/fatih/structs v1.1.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/golang-common-packages/caching v0.0.0-20200213092332-0ba525e488b8
 	github.com/golang-common-packages/cloud-storage v0.0.0-20200115075632-4610161fd917
@@ -20,25 +18,21 @@ require (
 	github.com/golang-common-packages/monitoring v0.0.0-20200128121100-fbde2762cadb
 	github.com/golang-common-packages/otp v0.0.0-20200128034034-0a3fb9d1e1c7
 	github.com/gopherjs/gopherjs v0.0.0-20200209183636-89e6cbcd0b6d // indirect
-	github.com/jinzhu/gorm v1.9.12
 	github.com/klauspost/compress v1.10.0 // indirect
 	github.com/koltyakov/gosip v0.0.0-20200212112824-492a28e8d8ae // indirect
 	github.com/labstack/echo/v4 v4.1.14
 	github.com/leodido/go-urn v1.2.0 // indirect
-	github.com/lib/pq v1.3.0
 	github.com/newrelic/go-agent v3.3.0+incompatible // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/prometheus/client_golang v1.4.1 // indirect
-	github.com/shomali11/util v0.0.0-20190608141102-c39c2521a2ab // indirect
 	github.com/smartystreets/assertions v1.0.1 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.6.2
-	github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71 // indirect
 	github.com/tidwall/pretty v1.0.1 // indirect
-	go.mongodb.org/mongo-driver v1.3.0
+	go.mongodb.org/mongo-driver v1.3.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 	gopkg.in/ini.v1 v1.52.0 // indirect

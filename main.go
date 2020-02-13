@@ -62,6 +62,7 @@ var (
 			CacheSize:        10 * 1024 * 1024, // byte
 			SizeChecker:      true,
 		}}),
+		//Cache: caching.New(caching.BIGCACHE, &caching.Config{BigCache: bigcache.DefaultConfig(10 * time.Minute)}),
 		Storage: cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
 		Email: email.NewMailClient(email.SENDGRID, &email.MailConfig{
 			URL:       conf.Service.Email.Host,
