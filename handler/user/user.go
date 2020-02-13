@@ -116,9 +116,14 @@ func (h *Handler) active() echo.HandlerFunc {
 		}
 
 		// Get otp code from Redis, that is stored from register API
-		username, err := h.Cache.Get(h.Hash.SHA512(otp))
+		rawUsername, err := h.Cache.Get(h.Hash.SHA512(otp))
 		if err != nil { // Not found otp on Redis
 			return echo.NewHTTPError(http.StatusBadRequest, "OTP does not exist")
+		}
+
+		username, ok := rawUsername.(string)
+		if !ok {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Can not convert username from interface{} to string")
 		}
 
 		// Get User info by username and change info
