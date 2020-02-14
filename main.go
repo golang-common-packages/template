@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/allegro/bigcache/v2"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -57,12 +58,12 @@ var (
 		//	Host:     conf.Service.Database.Redis.Host,
 		//	DB:       conf.Service.Database.Redis.DB,
 		//}}),
-		Cache: caching.New(caching.CUSTOM, &caching.Config{CustomCache: caching.CustomCache{
-			CleaningInterval: 3600000000000,    // nanosecond
-			CacheSize:        10 * 1024 * 1024, // byte
-			SizeChecker:      true,
-		}}),
-		//Cache: caching.New(caching.BIGCACHE, &caching.Config{BigCache: bigcache.DefaultConfig(10 * time.Minute)}),
+		//Cache: caching.New(caching.CUSTOM, &caching.Config{CustomCache: caching.CustomCache{
+		//	CleaningInterval: 3600000000000,    // nanosecond
+		//	CacheSize:        10 * 1024 * 1024, // byte
+		//	SizeChecker:      true,
+		//}}),
+		Cache:   caching.New(caching.BIGCACHE, &caching.Config{BigCache: bigcache.DefaultConfig(10 * time.Minute)}),
 		Storage: cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
 		Email: email.NewMailClient(email.SENDGRID, &email.MailConfig{
 			URL:       conf.Service.Email.Host,
@@ -80,7 +81,7 @@ var (
 
 func main() {
 	e.Use(middleware.RequestID())
-	e.Use(middleware.Recover())
+	//e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	e.Use(middleware.Gzip())
 
