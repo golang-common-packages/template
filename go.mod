@@ -9,7 +9,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dropbox/dropbox-sdk-go-unofficial v5.6.0+incompatible // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/golang-common-packages/caching v0.0.0-20200215082552-638c8a946898
+	github.com/golang-common-packages/caching v0.0.0-20200216125601-d3dac3a68e96
 	github.com/golang-common-packages/cloud-storage v0.0.0-20200115075632-4610161fd917
 	github.com/golang-common-packages/database v0.0.0-20200213142008-c04522031568
 	github.com/golang-common-packages/echo-jwt-middleware v0.0.0-20200115080138-cfefef20f0af

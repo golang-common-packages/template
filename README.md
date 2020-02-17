@@ -2,7 +2,7 @@
 
 # Information
 * GoLand
-* Go 1.12.4+ and Go Modules
+* Go 1.13.8+
 * Service run on port 3000 (Port 4040 on docker container)
 * Create config/main.yaml base on main-template.yaml before you run this template
 * Remove unused files and services based on your needs

@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	logmessage "log"
+	logger "log"
 	"os"
 	"os/signal"
 	"strconv"
@@ -85,9 +85,9 @@ func main() {
 	e.Use(middleware.CORS())
 	e.Use(middleware.Gzip())
 	e.Use(middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
-		logmessage.Printf("%s %v %s", c.Request().Method, c.Response().Status, c.Request().Host+c.Request().URL.Path)
-		logmessage.Printf("Request body: %s", string(reqBody))
-		logmessage.Printf("Response body: %s", string(resBody))
+		logger.Printf("%s %v %s", c.Request().Method, c.Response().Status, c.Request().Host+c.Request().URL.Path)
+		logger.Printf("Request body: %s", string(reqBody))
+		logger.Printf("Response body: %s", string(resBody))
 	}))
 
 	// Apply log service to echo

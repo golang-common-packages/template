@@ -135,6 +135,8 @@ github.com/golang-common-packages/caching v0.0.0-20200214163644-0359f4990fec h1:
 github.com/golang-common-packages/caching v0.0.0-20200214163644-0359f4990fec/go.mod h1:LaPjEtrPGLTJww4HF5JCyiPLJO4/WsiCyXhBg2KCaBo=
 github.com/golang-common-packages/caching v0.0.0-20200215082552-638c8a946898 h1:r/O45sIiwOGrr+AKe5SjgG/i3udbJ3IpkhqOxhAUvv0=
 github.com/golang-common-packages/caching v0.0.0-20200215082552-638c8a946898/go.mod h1:zqKdGdK3OxtcqR9d7o/N8s39qNBiiyGKAVtOj7G1Dgg=
+github.com/golang-common-packages/caching v0.0.0-20200216125601-d3dac3a68e96 h1:jQ7Ynp++ZKjBYG8gWWKNxNyzpDOu6o5fD9n7YUrIDFA=
+github.com/golang-common-packages/caching v0.0.0-20200216125601-d3dac3a68e96/go.mod h1:zqKdGdK3OxtcqR9d7o/N8s39qNBiiyGKAVtOj7G1Dgg=
 github.com/golang-common-packages/cloud-storage v0.0.0-20200115075632-4610161fd917 h1:XGd3WBa/qAneIC8uJQ3rVhiUcxNNLV1oMiUkEvAKMvA=
 github.com/golang-common-packages/cloud-storage v0.0.0-20200115075632-4610161fd917/go.mod h1:n06HWv6jtPnNIJPnyq7Hpy4nKfzdxhlJ/cqBgY9mC2k=
 github.com/golang-common-packages/database v0.0.0-20200213142008-c04522031568 h1:VyVcMn/klhClw+amPmUqHCkoWPPmV4+I/lDnv4ezALI=
