@@ -1,13 +1,13 @@
-## Service template
+# API template
 
-# Information
-* GoLand
+## Information
 * Go 1.13.8+
-* Service run on port 3000 (Port 4040 on docker container)
+* GoLand or VSCode
+* Service run on port 3000
 * Create config/main.yaml base on main-template.yaml before you run this template
 * Remove unused files and services based on your needs
 
-# Go configs (For Linux)
+## Setup Go ENV on Linux (add to .bashrc)
 ````$xslt
 export GOROOT=/usr/local/go
 export GOPATH=~/go
@@ -15,51 +15,53 @@ export GOBIN=${GOPATH}/bin
 export PATH=${PATH}:/usr/local/bin:${GOROOT}/bin:${GOBIN}
 ````
 
-# Google credential
+## Google credential
 * Login Google Develop
 * Download credential (JSON)
 * Setup ENV in GoLand
-* Or with PowerShell:
+* Or export by command line: https://cloud.google.com/docs/authentication/getting-started
+
+## Debian packages
 ````$xslt
-$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\nbxtr\Documents\project\template-golang.json"
+sudo apt-get install gcc resolvconf -y
 ````
 
-# Debian packages
-````$xslt
-sudo apt-get install gcc resolvconf docker.io docker-compose -y
-````
-
-# Anaconda environment
+## Anaconda environment (optional)
 ````$xslt
 conda create -yn backend-golang go
 conda activate backend-golang
 conda install gxx_linux-64
 ````
 
-# Run develop mode
+## Run develop mode
 ````$xslt
-GO111MODULE=on go run main.go
+go run main.go
 ````
 
-# Build and run production mode
+Or you can run with export ENV
 ````$xslt
-GO111MODULE=on go build
+export GOOGLE_APPLICATION_CREDENTIALS=[PATH]" && ... && go run main.go
+````
+
+## Build and run production mode
+````$xslt
+go build
 ./backend-golang
 ````
 
-# Terminate service
+## Terminate service
 ````$xslt
 sudo kill -9 $(sudo lsof -t -i:3000)
 ````
 
-# OpenSSL Generator
-* In "key" folder
+## OpenSSL Generator (for API access and refesh tokens)
+* In "key" folder run:
 ````$xslt
 openssl genrsa -out app.rsa 4096
 openssl rsa -in app.rsa -pubout > app.rsa.pub
 ````
 
-# Deploy to Heroku
+## Deploy to Heroku
 * 'heroku: true' in main.yaml
 ````$xslt
 heroku login
@@ -68,7 +70,7 @@ git push heroku master
 heroku logs --tail --app {HEROKU_APP_NAME}
 ````
 
-# Install Kafka
+## Install Kafka (optional)
 ````$xslt
 git clone https://github.com/edenhill/librdkafka.git
 cd librdkafka
@@ -77,24 +79,20 @@ make
 sudo make install
 ````
 
-# Generate a self-signed X.509 TLS certificate
+## Generate a self-signed X.509 TLS certificate (optional)
 Run the following command to generate cert.pem and key.pem files in key folder:
 ````$xslt
 cd key
 go run $GOROOT/src/crypto/tls/generate_cert.go --host localhost
 ````
 
-# Docker build
+## Docker build and build
 ````$xslt
 docker build --rm -t backend-golang .
-````
-
-# Docker run
-````$xslt
 docker run -d -p 4040:3000 --name backend-golang backend-golang:latest
 ````
 
-# System troubleshooting
+## System troubleshooting
 1/ When you has error "cannot unmarshal DNS message":
 
 * Install the resolvconf package.
@@ -107,6 +105,8 @@ sudo apt-get install resolvconf -y
 ````$xslt
 nameserver 8.8.4.4
 nameserver 8.8.8.8
+nameserver 1.1.1.1
+nameserver 1.0.0.1
 ````
 
 * Restart the resolvconf service.

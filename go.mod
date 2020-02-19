@@ -4,8 +4,6 @@ go 1.13
 
 require (
 	cloud.google.com/go v0.53.0 // indirect
-	github.com/allegro/bigcache v1.2.1
-	github.com/allegro/bigcache/v2 v2.2.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dropbox/dropbox-sdk-go-unofficial v5.6.0+incompatible // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
