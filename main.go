@@ -14,7 +14,7 @@ import (
 
 	"github.com/golang-common-packages/caching"
 	"github.com/golang-common-packages/cloud-storage"
-	"github.com/golang-common-packages/database"
+	"github.com/golang-common-packages/database/nosql"
 	"github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
@@ -46,7 +46,7 @@ var (
 	})
 	env = &config.Environment{
 		Config: &conf,
-		Database: database.NewDatabase(database.MONGODB, &database.Database{MongoDB: database.MongoDB{
+		Database: nosql.New(nosql.MONGODB, &nosql.Config{MongoDB: nosql.MongoDB{
 			User:     conf.Service.Database.MongoDB.User,
 			Password: conf.Service.Database.MongoDB.Password,
 			Hosts:    conf.Service.Database.MongoDB.Hosts,

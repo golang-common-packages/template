@@ -121,6 +121,8 @@ github.com/golang-common-packages/cloud-storage v0.0.0-20200115075632-4610161fd9
 github.com/golang-common-packages/cloud-storage v0.0.0-20200115075632-4610161fd917/go.mod h1:n06HWv6jtPnNIJPnyq7Hpy4nKfzdxhlJ/cqBgY9mC2k=
 github.com/golang-common-packages/database v0.0.0-20200213142008-c04522031568 h1:VyVcMn/klhClw+amPmUqHCkoWPPmV4+I/lDnv4ezALI=
 github.com/golang-common-packages/database v0.0.0-20200213142008-c04522031568/go.mod h1:owtJMGkNtrbuAx1rbfCSyzCQpGCiZDwsZpyDMU2JTeE=
+github.com/golang-common-packages/database v0.0.0-20200222132425-719615cec3ed h1:WAl0JLr5nYY19ydpnk1Ui0lcYif5u9C8BQ4NnVf14r0=
+github.com/golang-common-packages/database v0.0.0-20200222132425-719615cec3ed/go.mod h1:DBwsvMkpeEa9oiGgTxEmafmeLzSaLd1qu1azdrEzyIM=
 github.com/golang-common-packages/echo-jwt-middleware v0.0.0-20200115080138-cfefef20f0af h1:Uc8YxX2ih1oMeN9uptX8Dkn5f+AqvKyoAwSOgxZXMwQ=
 github.com/golang-common-packages/echo-jwt-middleware v0.0.0-20200115080138-cfefef20f0af/go.mod h1:+TnBi7367meYIlIwaHy3+MVuJJmyqCihfMJtXnR2wuk=
 github.com/golang-common-packages/email v0.0.0-20200118111024-ed5333b20928 h1:MjyZKtM0eNJWaY8xK6ZjR76z4mNP0Hq5CImQzMREF8k=
@@ -208,6 +210,8 @@ github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+o
 github.com/klauspost/compress v1.9.5/go.mod h1:RyIbtBH6LamlWaDj8nUwkbUhJ87Yi3uG0guNDohfE1A=
 github.com/klauspost/compress v1.10.0 h1:92XGj1AcYzA6UrVdd4qIIBrT8OroryvRvdmg/IfmC7Y=
 github.com/klauspost/compress v1.10.0/go.mod h1:aoV0uJVorq1K+umq18yTdKaF57EivdYsUV+/s2qKfXs=
+github.com/klauspost/compress v1.10.1 h1:a/QY0o9S6wCi0XhxaMX/QmusicNUqCqFugR6WKPOSoQ=
+github.com/klauspost/compress v1.10.1/go.mod h1:aoV0uJVorq1K+umq18yTdKaF57EivdYsUV+/s2qKfXs=
 github.com/koltyakov/gosip v0.0.0-20200111092621-aa4d91f6fb1b h1:DMu8K4tLYxWDq63HRFzZPyg2VBclNeiOQsFJ557Ytfk=
 github.com/koltyakov/gosip v0.0.0-20200111092621-aa4d91f6fb1b/go.mod h1:GtWn0L05CtvJMJ1v20lX9jhfV5TY/2qf9lecT718TzU=
 github.com/koltyakov/gosip v0.0.0-20200214081546-6e8d09417892 h1:LP2GzhspX3FRR8F4JlfYulZwOkFKTMAUuI4QUZGjnb4=
@@ -360,6 +364,8 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
+github.com/stretchr/testify v1.5.1 h1:nOGnQDM7FYENwehXlg/kFVnos3rEvtKTjRvOWSzb6H4=
+github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
 github.com/subosito/gotenv v1.2.0 h1:Slr1R9HxAlEKefgq5jn9U+DnETlIUa6HfgEzj0g5d7s=
 github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69rRypqCw=
 github.com/tidwall/pretty v1.0.0 h1:HsD+QiTn7sK6flMKIvNmpqz1qrpP3Ps6jOKIKMooyg4=
@@ -412,6 +418,8 @@ golang.org/x/crypto v0.0.0-20200128174031-69ecbb4d6d5d/go.mod h1:LzIPMQfyMNhhGPh
 golang.org/x/crypto v0.0.0-20200206161412-a0c6ece9d31a/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/crypto v0.0.0-20200214034016-1d94cc7ab1c6 h1:Sy5bstxEqwwbYs6n0/pBuxKENqOeZUgD45Gp3Q3pqLg=
 golang.org/x/crypto v0.0.0-20200214034016-1d94cc7ab1c6/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
+golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d h1:1ZiEyfaQIg3Qh0EoqpwAakHVhecoE5wlSg5GjnafJGw=
+golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/exp v0.0.0-20190306152737-a1d7652674e8/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/exp v0.0.0-20190510132918-efd6b22b2522/go.mod h1:ZjyILWgesfNpC6sMxTJOJm9Kp84zZh5NQWvqDGG3Qr8=

@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/golang-common-packages/caching"
 	"github.com/golang-common-packages/cloud-storage"
-	"github.com/golang-common-packages/database"
+	"github.com/golang-common-packages/database/nosql"
 	"github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
@@ -16,7 +16,7 @@ import (
 // Environment model for variable environment
 type Environment struct {
 	Config   *model.Root
-	Database database.IDatabase
+	Database nosql.INoSQL
 	Cache    caching.ICaching
 	Storage  cloudStorage.Filestore
 	Email    email.IMailClient
