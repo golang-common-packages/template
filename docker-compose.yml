@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  backend-golang:
+  go-template:
     image: golang-common-packages:latest
     container_name: golang-common-packages
     hostname: golang-common-packages

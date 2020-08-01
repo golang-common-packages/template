@@ -1,1 +1,1 @@
-web: backend-golang
+web: go-template

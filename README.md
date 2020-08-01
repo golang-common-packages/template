@@ -28,8 +28,8 @@ sudo apt-get install gcc resolvconf -y
 
 ## Anaconda environment (optional)
 ````$xslt
-conda create -yn backend-golang go
-conda activate backend-golang
+conda create -yn go-template go
+conda activate go-template
 conda install gxx_linux-64
 ````
 
@@ -46,7 +46,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=[PATH]" && ... && go run main.go
 ## Build and run production mode
 ````$xslt
 go build
-./backend-golang
+./go-template
 ````
 
 ## Terminate service
@@ -88,8 +88,8 @@ go run $GOROOT/src/crypto/tls/generate_cert.go --host localhost
 
 ## Docker build and build
 ````$xslt
-docker build --rm -t backend-golang .
-docker run -d -p 4040:3000 --name backend-golang backend-golang:latest
+docker build --rm -t go-template .
+docker run -d -p 4040:3000 --name go-template go-template:latest
 ````
 
 ## System troubleshooting

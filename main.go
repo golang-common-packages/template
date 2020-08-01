@@ -13,7 +13,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/golang-common-packages/caching"
-	"github.com/golang-common-packages/cloud-storage"
+	// "github.com/golang-common-packages/cloud-storage"
 	"github.com/golang-common-packages/database/nosql"
 	"github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
@@ -37,7 +37,7 @@ import (
 var (
 	e         = echo.New()
 	wg        sync.WaitGroup
-	conf      = config.Load("backend-golang")
+	conf      = config.Load("go-template")
 	logClient = log.New(false, log.FLUENT, &log.Fluent{
 		Tag:    conf.Service.Fluent.Tag,
 		Host:   conf.Service.Fluent.Host,
@@ -53,18 +53,18 @@ var (
 			Options:  conf.Service.Database.MongoDB.Options,
 			DB:       conf.Service.Database.MongoDB.DB,
 		}}),
-		//Cache: caching.New(caching.REDIS, &caching.Config{Redis: caching.Redis{
-		//	Password: conf.Service.Database.Redis.Password,
-		//	Host:     conf.Service.Database.Redis.Host,
-		//	DB:       conf.Service.Database.Redis.DB,
-		//}}),
+		// Cache: caching.New(caching.REDIS, &caching.Config{Redis: caching.Redis{
+		// 	Password: conf.Service.Database.Redis.Password,
+		// 	Host:     conf.Service.Database.Redis.Host,
+		// 	DB:       conf.Service.Database.Redis.DB,
+		// }}),
 		Cache: caching.New(caching.CUSTOM, &caching.Config{CustomCache: caching.CustomCache{
 			CleaningInterval: 30 * time.Minute,
 			CacheSize:        10 * 1024 * 1024, // byte
 			SizeChecker:      true,
 		}}),
-		//Cache:   caching.New(caching.BIGCACHE, &caching.Config{BigCache: bigcache.DefaultConfig(10 * time.Minute)}),
-		Storage: cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
+		// Cache:   caching.New(caching.BIGCACHE, &caching.Config{BigCache: bigcache.DefaultConfig(10 * time.Minute)}),
+		// Storage: cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
 		Email: email.NewMailClient(email.SENDGRID, &email.MailConfig{
 			URL:       conf.Service.Email.Host,
 			Port:      conf.Service.Email.Port,

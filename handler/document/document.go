@@ -29,10 +29,10 @@ func New(env *config.Environment) *Handler {
 func (h *Handler) Handler(e *echo.Group) {
 	e.GET("/document", h.list(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
 	e.POST("/document", h.save(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Cache.Middleware(h.Hash), h.Monitor.Middleware())
-	e.GET("/drive", h.files(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
-	e.POST("/drive", h.upload(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
-	e.DELETE("/drive", h.delete(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
-	e.GET("/drive/donwload", h.donwload(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
+	// e.GET("/drive", h.files(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
+	// e.POST("/drive", h.upload(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
+	// e.DELETE("/drive", h.delete(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
+	// e.GET("/drive/donwload", h.donwload(), h.JWT.Middleware(h.Config.Token.Accesstoken.PublicKey), h.Monitor.Middleware())
 }
 
 // localhost:3000/api/v1/document?limit=3

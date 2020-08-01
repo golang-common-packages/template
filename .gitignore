@@ -1,4 +1,4 @@
-backend-golang
+go-template
 *exe
 /.idea/
 /config/
