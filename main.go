@@ -14,8 +14,9 @@ import (
 
 	"github.com/golang-common-packages/caching"
 	// "github.com/golang-common-packages/cloud-storage"
+	databaseModel "github.com/golang-common-packages/database/model"
 	"github.com/golang-common-packages/database/nosql"
-	"github.com/golang-common-packages/echo-jwt-middleware"
+	jwtMiddleware "github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
 	"github.com/golang-common-packages/log"
@@ -46,13 +47,13 @@ var (
 	})
 	env = &config.Environment{
 		Config: &conf,
-		Database: nosql.New(nosql.MONGODB, &nosql.Config{MongoDB: nosql.MongoDB{
+		Database: nosql.New(nosql.MONGODB, &databaseModel.Config{MongoDB: databaseModel.MongoDB{
 			User:     conf.Service.Database.MongoDB.User,
 			Password: conf.Service.Database.MongoDB.Password,
 			Hosts:    conf.Service.Database.MongoDB.Hosts,
 			Options:  conf.Service.Database.MongoDB.Options,
 			DB:       conf.Service.Database.MongoDB.DB,
-		}}),
+		}}).(nosql.INoSQL),
 		// Cache: caching.New(caching.REDIS, &caching.Config{Redis: caching.Redis{
 		// 	Password: conf.Service.Database.Redis.Password,
 		// 	Host:     conf.Service.Database.Redis.Host,
@@ -61,7 +62,7 @@ var (
 		Cache: caching.New(caching.CUSTOM, &caching.Config{CustomCache: caching.CustomCache{
 			CleaningInterval: 30 * time.Minute,
 			CacheSize:        10 * 1024 * 1024, // byte
-			SizeChecker:      true,
+			CleaningEnable:   true,
 		}}),
 		// Cache:   caching.New(caching.BIGCACHE, &caching.Config{BigCache: bigcache.DefaultConfig(10 * time.Minute)}),
 		// Storage: cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
