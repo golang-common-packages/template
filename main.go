@@ -12,13 +12,13 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	"github.com/golang-common-packages/database"
 	jwtMiddleware "github.com/golang-common-packages/echo-jwt-middleware"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
 	"github.com/golang-common-packages/log"
 	"github.com/golang-common-packages/monitoring"
 	"github.com/golang-common-packages/otp"
+	"github.com/golang-common-packages/storage"
 
 	"github.com/golang-common-packages/template/config"
 	"github.com/golang-common-packages/template/model"
@@ -44,18 +44,18 @@ var (
 	})
 	env = &config.Environment{
 		Config: &conf,
-		Database: database.New(database.NOSQL)(database.MONGODB, &database.Config{MongoDB: database.MongoDB{
+		Database: storage.New(storage.NOSQL)(storage.MONGODB, &storage.Config{MongoDB: storage.MongoDB{
 			User:     conf.Service.Database.MongoDB.User,
 			Password: conf.Service.Database.MongoDB.Password,
 			Hosts:    conf.Service.Database.MongoDB.Hosts,
 			Options:  conf.Service.Database.MongoDB.Options,
 			DB:       conf.Service.Database.MongoDB.DB,
-		}}).(database.INoSQL),
-		Cache: database.New(database.CACHING)(database.CUSTOM, &database.Config{CustomCache: database.CustomCache{
+		}}).(storage.INoSQL),
+		Cache: storage.New(storage.CACHING)(storage.CUSTOM, &storage.Config{CustomCache: storage.CustomCache{
 			CleaningInterval: 30 * time.Minute,
 			CacheSize:        10 * 1024 * 1024, // byte
 			CleaningEnable:   true,
-		}}).(database.ICaching),
+		}}).(storage.ICaching),
 		Email: email.NewMailClient(email.SENDGRID, &email.MailConfig{
 			URL:       conf.Service.Email.Host,
 			Port:      conf.Service.Email.Port,
