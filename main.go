@@ -12,9 +12,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	databaseAbstractFactory "github.com/golang-common-packages/database"
-	databaseModel "github.com/golang-common-packages/database/model"
-	databaseNoSql "github.com/golang-common-packages/database/nosql"
+	"github.com/golang-common-packages/database"
 	jwtMiddleware "github.com/golang-common-packages/echo-jwt-middleware"
 	// "github.com/golang-common-packages/cloud-storage"
 	"github.com/golang-common-packages/caching"
@@ -48,13 +46,13 @@ var (
 	})
 	env = &config.Environment{
 		Config: &conf,
-		Database: databaseAbstractFactory.New(databaseAbstractFactory.NOSQL)(databaseNoSql.MONGODB, &databaseModel.Config{MongoDB: databaseModel.MongoDB{
+		Database: database.New(database.NOSQL)(database.MONGODB, &database.Config{MongoDB: database.MongoDB{
 			User:     conf.Service.Database.MongoDB.User,
 			Password: conf.Service.Database.MongoDB.Password,
 			Hosts:    conf.Service.Database.MongoDB.Hosts,
 			Options:  conf.Service.Database.MongoDB.Options,
 			DB:       conf.Service.Database.MongoDB.DB,
-		}}).(databaseNoSql.INoSQL),
+		}}).(database.INoSQL),
 		// Cache:   caching.New(caching.BIGCACHE, &caching.Config{BigCache: bigcache.DefaultConfig(10 * time.Minute)}),
 		// Cache: caching.New(caching.REDIS, &caching.Config{Redis: caching.Redis{
 		// 	Password: conf.Service.Database.Redis.Password,
