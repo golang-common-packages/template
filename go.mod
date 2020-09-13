@@ -8,7 +8,6 @@ require (
 	github.com/dropbox/dropbox-sdk-go-unofficial v5.6.0+incompatible // indirect
 	github.com/fluent/fluent-logger-golang v1.5.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/golang-common-packages/caching v0.0.0-20200217150809-b672d3835700
 	github.com/golang-common-packages/cloud-storage v0.0.0-20200115075632-4610161fd917
 	github.com/golang-common-packages/database v0.0.0-20200913031644-c66e5cc25be0
 	github.com/golang-common-packages/echo-jwt-middleware v0.0.0-20200115080138-cfefef20f0af

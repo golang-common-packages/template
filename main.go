@@ -14,8 +14,6 @@ import (
 
 	"github.com/golang-common-packages/database"
 	jwtMiddleware "github.com/golang-common-packages/echo-jwt-middleware"
-	// "github.com/golang-common-packages/cloud-storage"
-	"github.com/golang-common-packages/caching"
 	"github.com/golang-common-packages/email"
 	"github.com/golang-common-packages/hash"
 	"github.com/golang-common-packages/log"
@@ -53,17 +51,11 @@ var (
 			Options:  conf.Service.Database.MongoDB.Options,
 			DB:       conf.Service.Database.MongoDB.DB,
 		}}).(database.INoSQL),
-		// Cache:   caching.New(caching.BIGCACHE, &caching.Config{BigCache: bigcache.DefaultConfig(10 * time.Minute)}),
-		// Cache: caching.New(caching.REDIS, &caching.Config{Redis: caching.Redis{
-		// 	Password: conf.Service.Database.Redis.Password,
-		// 	Host:     conf.Service.Database.Redis.Host,
-		// 	DB:       conf.Service.Database.Redis.DB,
-		// }}),
-		Cache: caching.New(caching.CUSTOM, &caching.Config{CustomCache: caching.CustomCache{
+		Cache: database.New(database.CACHING)(database.CUSTOM, &database.Config{CustomCache: database.CustomCache{
 			CleaningInterval: 30 * time.Minute,
 			CacheSize:        10 * 1024 * 1024, // byte
 			CleaningEnable:   true,
-		}}),
+		}}).(database.ICaching),
 		Email: email.NewMailClient(email.SENDGRID, &email.MailConfig{
 			URL:       conf.Service.Email.Host,
 			Port:      conf.Service.Email.Port,
@@ -71,7 +63,6 @@ var (
 			Password:  conf.Service.Email.Password,
 			SecretKey: conf.Service.Email.Key,
 		}),
-		// Storage: cloudStorage.NewFilestore(cloudStorage.DRIVE, nil),
 		Monitor: monitoring.New(monitoring.PGO, conf.Server.Name, ""),
 		JWT:     &jwtMiddleware.Client{},
 		Hash:    &hash.Client{},
