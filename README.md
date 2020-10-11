@@ -1,115 +1,88 @@
-# API template
+# go-clean-arch
 
-## Information
-* Go 1.13.8+
-* GoLand or VSCode
-* Service run on port 3000
-* Create config/main.yaml base on main-template.yaml before you run this template
-* Remove unused files and services based on your needs
+## Changelog
+- **v1**: checkout to the [v1 branch](https://github.com/golang-common-packages/template/tree/v1) <br>
+  Proposed on 2017, archived to v1 branch on 2018 <br>
+  Desc: Initial proposal by me. The story can be read here: https://medium.com/@imantumorang/golang-clean-archithecture-efd6d7c43047
 
-## Setup Go ENV on Linux (add to .bashrc)
-````$xslt
-export GOROOT=/usr/local/go
-export GOPATH=~/go
-export GOBIN=${GOPATH}/bin
-export PATH=${PATH}:/usr/local/bin:${GOROOT}/bin:${GOBIN}
-````
+- **v2**: checkout to the [v2 branch](https://github.com/golang-common-packages/template/tree/v2) <br>
+  Proposed on 2018, archived to v2 branch on 2020 <br>
+  Desc: Improvement from v1. The story can be read here: https://medium.com/@imantumorang/trying-clean-architecture-on-golang-2-44d615bf8fdf
 
-## Google credential
-* Login Google Develop
-* Download credential (JSON)
-* Setup ENV in GoLand
-* Or export by command line: https://cloud.google.com/docs/authentication/getting-started
+- **v3**: master branch <br>
+  Proposed on 2019, merged to master on 2020. <br>
+  Desc: Introducing Domain package, the details can be seen on this PR [#21](https://github.com/golang-common-packages/template/pull/21)
 
-## Debian packages
-````$xslt
-sudo apt-get install gcc resolvconf -y
-````
+## Description
+This is an example of implementation of Clean Architecture in Go (Golang) projects.
 
-## Anaconda environment (optional)
-````$xslt
-conda create -yn go-template go
-conda activate go-template
-conda install gxx_linux-64
-````
+Rule of Clean Architecture by Uncle Bob
+ * Independent of Frameworks. The architecture does not depend on the existence of some library of feature laden software. This allows you to use such frameworks as tools, rather than having to cram your system into their limited constraints.
+ * Testable. The business rules can be tested without the UI, Database, Web Server, or any other external element.
+ * Independent of UI. The UI can change easily, without changing the rest of the system. A Web UI could be replaced with a console UI, for example, without changing the business rules.
+ * Independent of Database. You can swap out Oracle or SQL Server, for Mongo, BigTable, CouchDB, or something else. Your business rules are not bound to the database.
+ * Independent of any external agency. In fact your business rules simply don’t know anything at all about the outside world.
 
-## Run develop mode
-````$xslt
-go run main.go
-````
+More at https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
 
-Or you can run with export ENV
-````$xslt
-export GOOGLE_APPLICATION_CREDENTIALS=[PATH]" && ... && go run main.go
-````
+This project has  4 Domain layer :
+ * Models Layer
+ * Repository Layer
+ * Usecase Layer  
+ * Delivery Layer
 
-## Build and run production mode
-````$xslt
-go build
-./go-template
-````
+#### The diagram:
 
-## Terminate service
-````$xslt
-sudo kill -9 $(sudo lsof -t -i:3000)
-````
+![golang clean architecture](https://github.com/golang-common-packages/template/raw/master/clean-arch.png)
 
-## OpenSSL Generator (for API access and refesh tokens)
-* In "key" folder run:
-````$xslt
-openssl genrsa -out app.rsa 4096
-openssl rsa -in app.rsa -pubout > app.rsa.pub
-````
+The original explanation about this project's structure  can read from this medium's post : https://medium.com/@imantumorang/golang-clean-archithecture-efd6d7c43047.
 
-## Deploy to Heroku
-* 'heroku: true' in main.yaml
-````$xslt
-heroku login
-heroku git:remote --app {HEROKU_APP_NAME}
-git push heroku master
-heroku logs --tail --app {HEROKU_APP_NAME}
-````
+It may different already, but the concept still the same in application level, also you can see the change log from v1 to current version in Master.
 
-## Install Kafka (optional)
-````$xslt
-git clone https://github.com/edenhill/librdkafka.git
-cd librdkafka
-./configure --prefix /usr
-make
-sudo make install
-````
+### How To Run This Project
+> Make Sure you have run the article.sql in your mysql
 
-## Generate a self-signed X.509 TLS certificate (optional)
-Run the following command to generate cert.pem and key.pem files in key folder:
-````$xslt
-cd key
-go run $GOROOT/src/crypto/tls/generate_cert.go --host localhost
-````
 
-## Docker build and build
-````$xslt
-docker build --rm -t go-template .
-docker run -d -p 4040:3000 --name go-template go-template:latest
-````
+Since the project already use Go Module, I recommend to put the source code in any folder but GOPATH.
 
-## System troubleshooting
-1/ When you has error "cannot unmarshal DNS message":
+#### Run the Testing
 
-* Install the resolvconf package.
-````$xslt
-sudo apt-get purge resolvconf -y
-sudo apt-get install resolvconf -y
-````
+```bash
+$ make test
+```
 
-* Edit /etc/resolvconf/resolv.conf.d/head and add the following:
-````$xslt
-nameserver 8.8.4.4
-nameserver 8.8.8.8
-nameserver 1.1.1.1
-nameserver 1.0.0.1
-````
+#### Run the Applications
+Here is the steps to run it with `docker-compose`
 
-* Restart the resolvconf service.
-````$xslt
-sudo service resolvconf restart
-````
+```bash
+#move to directory
+$ cd workspace
+
+# Clone into YOUR $GOPATH/src
+$ git clone https://github.com/golang-common-packages/template.git
+
+#move to project
+$ cd go-clean-arch
+
+# Build the docker image first
+$ make docker
+
+# Run the application
+$ make run
+
+# check if the containers are running
+$ docker ps
+
+# Execute the call
+$ curl localhost:9090/articles
+
+# Stop
+$ make stop
+```
+
+
+### Tools Used:
+In this project, I use some tools listed below. But you can use any simmilar library that have the same purposes. But, well, different library will have different implementation type. Just be creative and use anything that you really need. 
+
+- All libraries listed in [`go.mod`](https://github.com/golang-common-packages/template/blob/master/go.mod) 
+- ["github.com/vektra/mockery".](https://github.com/vektra/mockery) To Generate Mocks for testing needs.

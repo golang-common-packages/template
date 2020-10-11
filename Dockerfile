@@ -1,21 +1,26 @@
-# build stage
-FROM golang:alpine AS build-env
-WORKDIR /
-
-ENV GO111MODULE=on
+# Builder
+FROM golang:1.14.2-alpine3.11 as builder
 
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh gcc musl-dev && \
-    apk --no-cache add ca-certificates
+    apk --update add git make
 
-COPY ./ $GOPATH/src/github.com/golang-common-packages/template/
-COPY ./config/main.yaml /config/main.yaml
-COPY ./key/app.rsa /key/app.rsa
-COPY ./key/app.rsa.pub /key/app.rsa.pub
-COPY ./key/refresh.rsa /key/refresh.rsa
-COPY ./key/refresh.rsa.pub /key/refresh.rsa.pub
-RUN cd $GOPATH/src/github.com/golang-common-packages/template && \
-    GOOS=linux GOARCH=amd64 go build -o /main
+WORKDIR /app
 
-EXPOSE 3000
-CMD ["/main"]
+COPY . .
+
+RUN make engine
+
+# Distribution
+FROM alpine:latest
+
+RUN apk update && apk upgrade && \
+    apk --update --no-cache add tzdata && \
+    mkdir /app 
+
+WORKDIR /app 
+
+EXPOSE 9090
+
+COPY --from=builder /app/engine /app
+
+CMD /app/engine
