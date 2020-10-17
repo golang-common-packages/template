@@ -1,31 +1,31 @@
 package domain
 
 import (
-	"context"
+	"reflect"
 	"time"
 )
 
-// Book model
+// Book ...
 type Book struct {
-	ID         string    `json:"id,omitempty"`
-	Title      string    `json:"title,omitempty"`
-	Author     string    `json:"author,omitempty"`
-	Created    time.Time `json:"created,omitempty"`
-	Updated    time.Time `json:"updated,omitempty"`
-	Expiration time.Time `json:"expiration,omitempty"`
+	ID        int64     `json:"id"`
+	Title     string    `json:"title" validate:"required"`
+	Author    string    `json:"author" validate:"required"`
+	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
-// Pagination ...
-type Pagination struct {
-	LastID string `json:"lastID,omitempty"`
-	Limit  uint32 `json:"limit,omitempty"`
-}
-
-// BookRepository represent the book's repository contract
+// BookRepository ...
 type BookRepository interface {
-	Fetch(ctx context.Context, lastID string, limit uint32) (books []*Book, err error)
-	GetByID(ctx context.Context, id string) (book *Book, err error)
-	Update(ctx context.Context, book *Book) error
-	Store(ctx context.Context, book *Book) error
-	Delete(ctx context.Context, id string) error
+	Create(databaseName, collectionName string, books []Book) (interface{}, error)
+	Read(databaseName, collectionName string, filter interface{}, limit int64, dataModel reflect.Type) (interface{}, error)
+	Update(databaseName, collectionName string, filter, update interface{}) (interface{}, error)
+	Delete(databaseName, collectionName string, filter interface{}) (interface{}, error)
+}
+
+// BookUsecase ..
+type BookUsecase interface {
+	InsertBook(books []Book) (interface{}, error)
+	ListBooks(limit int64, dataModel reflect.Type) (interface{}, error)
+	UpdateBook(bookID string, update interface{}) (interface{}, error)
+	DeleteBook(bookID string) (interface{}, error)
 }

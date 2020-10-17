@@ -3,15 +3,14 @@
   "server": {
     "address": ":9090"
   },
-  "context":{
-    "timeout":2
+  "context": {
+    "timeout": 2
   },
   "database": {
-      "host": "mysql",
-      "port": "3306",
-      "user": "user",
-      "pass": "password",
-      "name": "article"
+    "host": "mysql",
+    "port": "3306",
+    "user": "user",
+    "pass": "password",
+    "name": "article"
   }
-
 }
