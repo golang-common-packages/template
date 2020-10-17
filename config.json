@@ -4,15 +4,17 @@
     "address": ":4000"
   },
   "database": {
-    "user": "",
-    "password": "",
-    "hosts": [
-      ""
-    ],
-    "db": "",
-    "options": [
-      "test",
-      "retryWrites=true"
-    ]
+    "mongodb": {
+      "user": "",
+      "password": "",
+      "hosts": [
+        ""
+      ],
+      "db": "",
+      "options": [
+        "test",
+        "retryWrites=true"
+      ]
+    }
   }
 }

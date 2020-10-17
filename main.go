@@ -10,27 +10,27 @@ import (
 	_httpMiddleware "github.com/golang-common-packages/template/book/delivery/http/middleware"
 	_bookRepo "github.com/golang-common-packages/template/book/repository/mongo"
 	_bookUsecase "github.com/golang-common-packages/template/book/usecase"
-	_cfg "github.com/golang-common-packages/template/config"
+	_config "github.com/golang-common-packages/template/config"
 )
 
 var (
-	config _cfg.IConfig
+	config _config.IConfig
 	dbConn storage.INoSQLDocument
 )
 
 func init() {
 
-	config = _cfg.NewViperConfig()
+	config = _config.NewViperConfig()
 	if config.GetBool(`debug`) {
 		log.Println("Service RUN on DEBUG mode")
 	}
 
 	dbConn = storage.New(storage.NOSQLDOCUMENT)(storage.MONGODB, &storage.Config{MongoDB: storage.MongoDB{
-		User:     config.GetString("database.user"),
-		Password: config.GetString("database.password"),
-		Hosts:    config.GetStringSlice("database.hosts"),
-		Options:  config.GetStringSlice("database.options"),
-		DB:       config.GetString("database.db"),
+		User:     config.GetString("database.mongodb.user"),
+		Password: config.GetString("database.mongodb.password"),
+		Hosts:    config.GetStringSlice("database.mongodb.hosts"),
+		Options:  config.GetStringSlice("database.mongodb.options"),
+		DB:       config.GetString("database.mongodb.db"),
 	}}).(storage.INoSQLDocument)
 }
 
