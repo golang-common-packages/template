@@ -17,13 +17,19 @@ func NewMongoBookRepository(Conn storage.INoSQLDocument) domain.BookRepository {
 }
 
 // Create ...
-func (mb *mongoBookRepository) Create(databaseName, collectionName string, books []domain.Book) (interface{}, error) {
+func (mb *mongoBookRepository) CreateMany(databaseName, collectionName string, books []domain.Book) (interface{}, error) {
+
 	newBooks := make([]interface{}, len(books))
 	for i, v := range books {
 		newBooks[i] = v
 	}
 
-	return mb.Conn.Create(databaseName, collectionName, newBooks)
+	result, err := mb.Conn.Create(databaseName, collectionName, newBooks)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 // Read ...

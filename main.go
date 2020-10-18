@@ -30,7 +30,7 @@ func init() {
 		Password: config.GetString("database.mongodb.password"),
 		Hosts:    config.GetStringSlice("database.mongodb.hosts"),
 		Options:  config.GetStringSlice("database.mongodb.options"),
-		DB:       config.GetString("database.mongodb.db"),
+		DB:       config.GetString("database.mongodb.dbName"),
 	}}).(storage.INoSQLDocument)
 }
 
@@ -41,7 +41,7 @@ func main() {
 	e.Use(middL.CORS)
 
 	bookRepo := _bookRepo.NewMongoBookRepository(dbConn)
-	bookUsecase := _bookUsecase.NewBookUsecase(bookRepo)
+	bookUsecase := _bookUsecase.NewBookUsecase(bookRepo, config.GetString("database.mongodb.dbName"), config.GetString("database.mongodb.bookCollName"))
 
 	_httpDeliver.NewBookHandler(e, bookUsecase)
 
