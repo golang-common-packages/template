@@ -5,7 +5,6 @@ import (
 	"reflect"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/golang-common-packages/template/domain"
@@ -44,22 +43,25 @@ func (bu *bookUsecase) InsertBooks(books *[]domain.Book) (interface{}, error) {
 }
 
 func (bu *bookUsecase) ListBooks(limit int64, dataModel reflect.Type) (interface{}, error) {
-	return bu.bookRepo.Read(bu.dbName, bu.collName, bson.D{}, limit, dataModel)
+	return bu.bookRepo.Read(bu.dbName, bu.collName, primitive.D{}, limit, dataModel)
 }
 
 func (bu *bookUsecase) UpdateBook(newData domain.Book) (interface{}, error) {
+	
 	idPrimitive, err := primitive.ObjectIDFromHex(fmt.Sprintf("%v", newData.ID))
 	if err != nil {
 		return nil, err
 	}
 
-	filter := bson.M{"_id": idPrimitive}
+	filter := primitive.D{
+		primitive.E{Key: "_id", Value: idPrimitive},
+	}
 
-	book := bson.D{
-		{"$set", bson.D{
-			{"title", newData.Title},
-			{"author", newData.Author},
-			{"updated", time.Now()},
+	book := primitive.D{
+		primitive.E{Key: "$set", Value: primitive.D{
+			primitive.E{Key: "title", Value: newData.Title},
+			primitive.E{Key: "author", Value: newData.Author},
+			primitive.E{Key: "updated", Value: time.Now()},
 		}},
 	}
 
@@ -73,7 +75,11 @@ func (bu *bookUsecase) DeleteBook(bookID string) (interface{}, error) {
 		return nil, err
 	}
 
-	result, err := bu.bookRepo.Delete(bu.dbName, bu.collName, bson.M{"_id": idPrimitive})
+	filter := primitive.D{
+		primitive.E{Key: "_id", Value: idPrimitive},
+	}
+
+	result, err := bu.bookRepo.Delete(bu.dbName, bu.collName, filter)
 	if err != nil {
 		return nil, err
 	}
