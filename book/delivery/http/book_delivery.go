@@ -1,4 +1,4 @@
-package http
+package bookHttpDelivery
 
 import (
 	"net/http"
@@ -21,8 +21,8 @@ type BookHandler struct {
 	BUsercase domain.BookUsecase
 }
 
-// NewBookHandler will initialize the book resources endpoint
-func NewBookHandler(e *echo.Echo, bu domain.BookUsecase) {
+// New will initialize the book resources endpoint
+func New(e *echo.Echo, bu domain.BookUsecase) {
 	handler := &BookHandler{
 		BUsercase: bu,
 	}

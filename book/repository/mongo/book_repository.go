@@ -1,4 +1,4 @@
-package mongo
+package bookMongoRepository
 
 import (
 	"reflect"
@@ -12,8 +12,8 @@ type mongoBookRepository struct {
 	Conn storage.INoSQLDocument
 }
 
-// NewMongoBookRepository will create an object that represent the domain.BookRepository interface
-func NewMongoBookRepository(Conn storage.INoSQLDocument) domain.BookRepository {
+// New will create an object that represent the domain.BookRepository interface
+func New(Conn storage.INoSQLDocument) domain.BookRepository {
 	return &mongoBookRepository{Conn}
 }
 

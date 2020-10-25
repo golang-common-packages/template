@@ -18,8 +18,8 @@ type IConfig interface {
 type viperConfig struct {
 }
 
-// NewViperConfig ...
-func NewViperConfig() IConfig {
+// New ...
+func New() IConfig {
 	v := &viperConfig{}
 	v.Init()
 	return v

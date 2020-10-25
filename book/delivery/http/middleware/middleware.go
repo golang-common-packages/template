@@ -1,4 +1,4 @@
-package middleware
+package BookHttpMiddleware
 
 import "github.com/labstack/echo/v4"
 
@@ -7,8 +7,8 @@ type GoMiddleware struct {
 	// another stuff , may be needed by middleware
 }
 
-// InitMiddleware initialize the middleware
-func InitMiddleware() *GoMiddleware {
+// New initialize the middleware
+func New() *GoMiddleware {
 	return &GoMiddleware{}
 }
 

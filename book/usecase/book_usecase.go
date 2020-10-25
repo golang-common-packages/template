@@ -1,4 +1,4 @@
-package usercase
+package bookUsercase
 
 import (
 	"fmt"
@@ -16,8 +16,8 @@ type bookUsecase struct {
 	collName string
 }
 
-// NewBookUsecase ...
-func NewBookUsecase(bookRepo domain.BookRepository, dbName, collectionName string) domain.BookUsecase {
+// New ...
+func New(bookRepo domain.BookRepository, dbName, collectionName string) domain.BookUsecase {
 	return &bookUsecase{
 		bookRepo: bookRepo,
 		dbName:   dbName,
