@@ -1,161 +1,48 @@
 package main
 
 import (
-	"context"
-	logger "log"
-	"os"
-	"os/signal"
-	"strconv"
-	"sync"
-	"time"
+	"log"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-
-	jwtMiddleware "github.com/golang-common-packages/echo-jwt-middleware"
-	"github.com/golang-common-packages/email"
-	"github.com/golang-common-packages/hash"
-	"github.com/golang-common-packages/log"
-	"github.com/golang-common-packages/monitoring"
-	"github.com/golang-common-packages/otp"
 	"github.com/golang-common-packages/storage"
+	"github.com/labstack/echo/v4"
 
+	"github.com/golang-common-packages/template/book/delivery/http"
+	"github.com/golang-common-packages/template/book/delivery/http/middleware"
+	"github.com/golang-common-packages/template/book/repository/mongo"
+	"github.com/golang-common-packages/template/book/usecase"
 	"github.com/golang-common-packages/template/config"
-	"github.com/golang-common-packages/template/model"
-
-	"github.com/golang-common-packages/template/handler/document"
-	"github.com/golang-common-packages/template/handler/healthcheck"
-	"github.com/golang-common-packages/template/handler/login"
-	"github.com/golang-common-packages/template/handler/logout"
-	"github.com/golang-common-packages/template/handler/metrics"
-	"github.com/golang-common-packages/template/handler/refreshtoken"
-	"github.com/golang-common-packages/template/handler/user"
 )
 
 var (
-	e         = echo.New()
-	wg        sync.WaitGroup
-	conf      = config.Load("go-template")
-	logClient = log.New(false, log.FLUENT, &log.Fluent{
-		Tag:    conf.Service.Fluent.Tag,
-		Host:   conf.Service.Fluent.Host,
-		Port:   conf.Service.Fluent.Port,
-		Prefix: conf.Service.Fluent.Prefix,
-	})
-	env = &config.Environment{
-		Config: &conf,
-		Database: storage.New(storage.NOSQL)(storage.MONGODB, &storage.Config{MongoDB: storage.MongoDB{
-			User:     conf.Service.Database.MongoDB.User,
-			Password: conf.Service.Database.MongoDB.Password,
-			Hosts:    conf.Service.Database.MongoDB.Hosts,
-			Options:  conf.Service.Database.MongoDB.Options,
-			DB:       conf.Service.Database.MongoDB.DB,
-		}}).(storage.INoSQL),
-		Cache: storage.New(storage.CACHING)(storage.CUSTOM, &storage.Config{CustomCache: storage.CustomCache{
-			CleaningInterval: 30 * time.Minute,
-			CacheSize:        10 * 1024 * 1024, // byte
-			CleaningEnable:   true,
-		}}).(storage.ICaching),
-		Email: email.NewMailClient(email.SENDGRID, &email.MailConfig{
-			URL:       conf.Service.Email.Host,
-			Port:      conf.Service.Email.Port,
-			Username:  conf.Service.Email.Username,
-			Password:  conf.Service.Email.Password,
-			SecretKey: conf.Service.Email.Key,
-		}),
-		Monitor: monitoring.New(monitoring.PGO, conf.Server.Name, ""),
-		JWT:     &jwtMiddleware.Client{},
-		Hash:    &hash.Client{},
-		OTP:     &otp.Client{},
-	}
+	cfg    config.IConfig
+	dbConn storage.INoSQLDocument
 )
 
-func main() {
-	e.Use(middleware.RequestID())
-	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
-	e.Use(middleware.Gzip())
-	e.Use(middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
-		logger.Printf("%s %v %s", c.Request().Method, c.Response().Status, c.Request().Host+c.Request().URL.Path)
-		logger.Printf("Request body: %s", string(reqBody))
-		logger.Printf("Response body: %s", string(resBody))
-	}))
+func init() {
 
-	// Apply log service to echo
-	e.Use(middleware.LoggerWithConfig(
-		middleware.LoggerConfig{ // add uuid header to log
-			Format: `{"level":"info","time":"${time_rfc3339_nano}","id":"${id}","remote_ip":"${remote_ip}","host":"${host}",` +
-				`"method":"${method}","uri":"${uri}","status":${status},"error":"${error}","latency":${latency},` +
-				`"latency_human":"${latency_human}","bytes_in":${bytes_in},` +
-				`"bytes_out":${bytes_out},"uuid":"${header:uuid}"}` + "\n",
-			Output: logClient,
-		},
-	))
-
-	// Setup API Group
-	apiGroup := e.Group("/api/" + conf.Server.Version)
-
-	// API routing
-	healthcheck.New(env).Handler(apiGroup)
-	login.New(env).Handler(apiGroup)
-	logout.New(env).Handler(apiGroup)
-	document.New(env).Handler(apiGroup)
-	user.New(env).Handler(apiGroup)
-	refreshtoken.New(env).Handler(apiGroup)
-
-	if env.Config.Server.Monitoring {
-		metrics.New(env).Handler(e.Group(""))
+	cfg = config.New()
+	if cfg.GetBool(`debug`) {
+		log.Println("Service RUN on DEBUG mode")
 	}
 
-	// Service run without listening channel
-	// e.Logger.Fatal(e.Start(":" + strconv.Itoa(conf.Server.Port)))
-
-	// Service run with listening channel
-	startServer(e, conf.Server)
-	wg.Wait()
+	dbConn = storage.New(storage.NOSQLDOCUMENT)(storage.MONGODB, &storage.Config{MongoDB: storage.MongoDB{
+		User:     cfg.GetString("database.mongodb.user"),
+		Password: cfg.GetString("database.mongodb.password"),
+		Hosts:    cfg.GetStringSlice("database.mongodb.hosts"),
+		Options:  cfg.GetStringSlice("database.mongodb.options"),
+		DB:       cfg.GetString("database.mongodb.dbName"),
+	}}).(storage.INoSQLDocument)
 }
 
-func startServer(e *echo.Echo, server model.Server) {
-	sigint := make(chan os.Signal, 1)
-	signal.Notify(sigint, os.Interrupt)
+func main() {
 
-	go func() {
-		// start server
-		e.Logger.Info("Start listening")
-		port := strconv.Itoa(server.Port)
+	e := echo.New()
+	middL := BookHttpMiddleware.New()
+	e.Use(middL.CORS)
 
-		if conf.Server.Heroku {
-			port = os.Getenv("PORT")
-		}
+	bookRepo := bookMongoRepository.New(dbConn)
+	bookUCase := bookUsecase.New(bookRepo, cfg.GetString("database.mongodb.dbName"), cfg.GetString("database.mongodb.bookCollName"))
+	bookHttpDelivery.New(e, bookUCase)
 
-		if conf.Server.HTTPS {
-			if err := e.StartTLS(":"+port, "./key/cert.pem", "./key/key.pem"); err != nil {
-				e.Logger.Infof("Https server has error: %v", err)
-				close(sigint)
-				return
-			}
-		}
-
-		if err := e.Start(":" + port); err != nil {
-			e.Logger.Infof("Http server has error: %v", err)
-			close(sigint)
-			return
-		}
-	}()
-
-	// listen for terminate signal
-	<-sigint
-	e.Logger.Infof("Shutting down the service")
-	var t time.Duration
-	if server.ShutdownTimeout < 1 {
-		t = 5 * time.Second
-	} else {
-		t = time.Duration(server.ShutdownTimeout) * time.Second
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), t)
-	defer cancel()
-	if err := e.Shutdown(ctx); err != nil {
-		e.Logger.Errorf("Http server shutdown: %v", err)
-	}
-	e.Logger.Infof("Service gracefully stopped")
+	e.Start(cfg.GetString("server.address"))
 }

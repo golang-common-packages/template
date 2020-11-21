@@ -1,0 +1,20 @@
+{
+  "debug": true,
+  "server": {
+    "address": ":4000"
+  },
+  "database": {
+    "mongodb": {
+      "user": "",
+      "password": "",
+      "hosts": [
+        ""
+      ],
+      "db": "",
+      "options": [
+        "test",
+        "retryWrites=true"
+      ]
+    }
+  }
+}
