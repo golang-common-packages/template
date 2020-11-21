@@ -1,0 +1,11 @@
+version: "2.3"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: golang_template_api
+    ports:
+      - 4000:4000
+    volumes:
+      - ./config.json:/app/config.json
