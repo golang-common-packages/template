@@ -41,7 +41,7 @@ func main() {
 	e.Use(middL.CORS)
 
 	bookRepo := bookMongoRepository.New(dbConn)
-	bookUCase := bookUsecase.New(bookRepo, cfg.GetString("database.mongodb.dbName"), cfg.GetString("database.mongodb.bookCollName"))
+	bookUCase := bookUsecase.New(bookRepo, cfg.GetString("database.mongodb.dbName"), cfg.GetString("database.mongodb.collections.book"))
 	bookHttpDelivery.New(e, bookUCase)
 
 	e.Start(cfg.GetString("server.address"))

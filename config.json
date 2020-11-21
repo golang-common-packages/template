@@ -10,7 +10,10 @@
       "hosts": [
         ""
       ],
-      "db": "",
+      "dbName": "backend-golang",
+      "collections": {
+        "book": "book"
+      },
       "options": [
         "test",
         "retryWrites=true"
