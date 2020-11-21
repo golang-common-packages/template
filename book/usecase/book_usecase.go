@@ -1,4 +1,4 @@
-package bookUsercase
+package bookUsecase
 
 import (
 	"fmt"
