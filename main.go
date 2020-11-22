@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/golang-common-packages/storage"
 	"github.com/labstack/echo/v4"
@@ -44,5 +45,9 @@ func main() {
 	bookUCase := bookUsecase.New(bookRepo, cfg.GetString("database.mongodb.dbName"), cfg.GetString("database.mongodb.collections.book"))
 	bookHttpDelivery.New(e, bookUCase)
 
-	e.Start(cfg.GetString("server.address"))
+	if cfg.GetBool("debug") {
+		e.Start(cfg.GetString("server.port"))
+	} else {
+		e.Start(os.Getenv("PORT"))
+	}
 }

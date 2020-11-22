@@ -1,7 +1,7 @@
 {
   "debug": true,
   "server": {
-    "address": ":4000"
+    "port": ":4000"
   },
   "database": {
     "mongodb": {
