@@ -23,4 +23,6 @@ EXPOSE 4000
 
 COPY --from=builder /app/engine /app
 
+COPY --from=builder /app/config.json /app
+
 CMD /app/engine
