@@ -46,8 +46,8 @@ func main() {
 	bookHttpDelivery.New(e, bookUCase)
 
 	if cfg.GetBool("debug") {
-		e.Start(cfg.GetString("server.port"))
+		e.Start(":" + cfg.GetString("server.port"))
 	} else {
-		e.Start(os.Getenv("PORT"))
+		e.Start(":" + os.Getenv("PORT"))
 	}
 }
