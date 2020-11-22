@@ -5,10 +5,10 @@
   },
   "database": {
     "mongodb": {
-      "user": "",
-      "password": "",
+      "user": "nbxtruong",
+      "password": "nbxtruong",
       "hosts": [
-        ""
+        "backend-golang-8yqw1.mongodb.net"
       ],
       "dbName": "backend-golang",
       "collections": {
