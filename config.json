@@ -1,14 +1,14 @@
 {
-  "debug": false,
+  "debug": true,
   "server": {
     "port": "4000"
   },
   "database": {
     "mongodb": {
-      "user": "nbxtruong",
-      "password": "nbxtruong",
+      "user": "",
+      "password": "",
       "hosts": [
-        "backend-golang-8yqw1.mongodb.net"
+        ""
       ],
       "dbName": "backend-golang",
       "collections": {
