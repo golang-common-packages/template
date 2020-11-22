@@ -1,5 +1,5 @@
 {
-  "debug": true,
+  "debug": false,
   "server": {
     "port": ":4000"
   },
