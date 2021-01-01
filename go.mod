@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/golang-common-packages/storage v0.0.0-20210101032857-79793a3b9dc9
+	github.com/golang-common-packages/storage v0.0.0-20210101101406-a45534fc4a07
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -17,6 +18,7 @@ import (
 var (
 	cfg    config.IConfig
 	dbConn storage.INoSQLDocument
+	ctx    = context.Background()
 )
 
 func init() {
@@ -26,7 +28,7 @@ func init() {
 		log.Println("Service RUN on DEBUG mode")
 	}
 
-	dbConn = storage.New(storage.NOSQLDOCUMENT)(storage.MONGODB, &storage.Config{MongoDB: storage.MongoDB{
+	dbConn = storage.New(ctx, storage.NOSQLDOCUMENT)(storage.MONGODB, &storage.Config{MongoDB: storage.MongoDB{
 		User:     cfg.GetString("database.mongodb.user"),
 		Password: cfg.GetString("database.mongodb.password"),
 		Hosts:    cfg.GetStringSlice("database.mongodb.hosts"),

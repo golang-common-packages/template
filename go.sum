@@ -133,8 +133,8 @@ github.com/golang-common-packages/hash v0.0.0-20200119064113-a0081e2a6db8 h1:a3D
 github.com/golang-common-packages/hash v0.0.0-20200119064113-a0081e2a6db8/go.mod h1:0JvieMtxIZO0VrJtgloaaHfNBQ2YsnSLppu//qkPsPM=
 github.com/golang-common-packages/linear v0.0.0-20201010133955-91cb5242123b h1:PAcIZibcnFuuRdQ5cijKqKXLb8JIhGjdrcE1FBNm9Vo=
 github.com/golang-common-packages/linear v0.0.0-20201010133955-91cb5242123b/go.mod h1:3mcpRwahyjO9zqI5N6HTepdhatAI2USB4kG+Fa6BrXU=
-github.com/golang-common-packages/storage v0.0.0-20210101032857-79793a3b9dc9 h1:5WLabT/BLf45HAFfX0HhP7urkAWempkm1jN+0W/SBKc=
-github.com/golang-common-packages/storage v0.0.0-20210101032857-79793a3b9dc9/go.mod h1:k6JogNM3ioLg3yDeaYmoGiUsog4EcU9hh1Zwq0tv1hQ=
+github.com/golang-common-packages/storage v0.0.0-20210101101406-a45534fc4a07 h1:n2haTxSq0r+czXgJ/fpJW9u5swm67YzGtUf5bf3DyIs=
+github.com/golang-common-packages/storage v0.0.0-20210101101406-a45534fc4a07/go.mod h1:k6JogNM3ioLg3yDeaYmoGiUsog4EcU9hh1Zwq0tv1hQ=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/groupcache v0.0.0-20190129154638-5b532d6fd5ef/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
 github.com/golang/groupcache v0.0.0-20190702054246-869f871628b6/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
