@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// IConfig ...
-type IConfig interface {
+// Config ...
+type Config interface {
 	GetString(key string) string
 	GetStringSlice(key string) []string
 	GetInt(key string) int
@@ -19,7 +19,7 @@ type viperConfig struct {
 }
 
 // New ...
-func New() IConfig {
+func New() Config {
 	v := &viperConfig{}
 	v.Init()
 	return v

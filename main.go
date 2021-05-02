@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	cfg    config.IConfig
+	cfg    config.Config
 	dbConn storage.INoSQLDocument
 	ctx    = context.Background()
 )
