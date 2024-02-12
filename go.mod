@@ -4,7 +4,6 @@ go 1.15
 
 require (
 	github.com/aws/aws-sdk-go v1.38.30 // indirect
-	github.com/bxcodec/faker v2.0.1+incompatible
 	github.com/gammazero/deque v0.0.0-20210428094316-be2070954176 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/golang-common-packages/storage v0.0.0-20210502060131-980306282e54
@@ -23,8 +22,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
-	github.com/xdg/scram v1.0.3 // indirect
-	github.com/xdg/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	go.mongodb.org/mongo-driver v1.5.1
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect
