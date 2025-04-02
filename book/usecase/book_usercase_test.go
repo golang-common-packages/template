@@ -17,15 +17,28 @@ func TestInsertBooks(t *testing.T) {
 	mockBookRepo := new(mocks.BookRepository)
 	mockDBName := string(mock.AnythingOfType("string"))
 	mockColName := string(mock.AnythingOfType("string"))
-	mockBook := []domain.Book{{}}
+	
+	validBooks := []domain.Book{
+		{
+			Title: "Valid Book",
+			Author: "Valid Author",
+		},
+	}
+
+	invalidBooks := []domain.Book{
+		{
+			Title: "", // Invalid - empty title
+			Author: "Author",
+		},
+	}
 
 	t.Run("success", func(t *testing.T) {
-		mockBookRepo.On("CreateMany", mockDBName, mockColName, mock.AnythingOfType("[]domain.Book")).
+		mockBookRepo.On("CreateMany", mockDBName, mockColName, validBooks).
 			Return(1, nil).
 			Once()
 
 		u := bookUsecase.New(mockBookRepo, mockDBName, mockColName)
-		r, err := u.InsertBooks(&mockBook)
+		r, err := u.InsertBooks(&validBooks)
 
 		assert.Equal(t, 1, r)
 		assert.NoError(t, err)
@@ -34,17 +47,28 @@ func TestInsertBooks(t *testing.T) {
 	})
 
 	t.Run("error-failed", func(t *testing.T) {
-		mockBookRepo.On("CreateMany", mockDBName, mockColName, mock.AnythingOfType("[]domain.Book")).
-			Return(nil, errors.New("Unexpexted Error")).
+		mockBookRepo.On("CreateMany", mockDBName, mockColName, validBooks).
+			Return(nil, errors.New("Unexpected Error")).
 			Once()
 
 		u := bookUsecase.New(mockBookRepo, mockDBName, mockColName)
-		r, err := u.InsertBooks(&mockBook)
+		r, err := u.InsertBooks(&validBooks)
 
 		assert.Empty(t, r)
 		assert.Error(t, err)
 
 		mockBookRepo.AssertExpectations(t)
+	})
+
+	t.Run("validation-failed", func(t *testing.T) {
+		u := bookUsecase.New(mockBookRepo, mockDBName, mockColName)
+		r, err := u.InsertBooks(&invalidBooks)
+
+		assert.Empty(t, r)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "validation failed")
+
+		mockBookRepo.AssertNotCalled(t, "CreateMany")
 	})
 }
 
@@ -55,7 +79,7 @@ func TestListBooks(t *testing.T) {
 	mockLimit := int64(10)
 	mockDataModel := reflect.TypeOf(domain.Book{})
 
-	t.Run("sucess", func(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
 		mockBookRepo.On("Read", mockDBName, mockColName, mock.AnythingOfType("primitive.D"), mock.AnythingOfType("int64"), mock.AnythingOfType("*reflect.rtype")).
 			Return(1, nil).
 			Once()
@@ -81,7 +105,7 @@ func TestUpdateBook(t *testing.T) {
 		Author: "B",
 	}
 
-	t.Run("sucess", func(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
 		mockBookRepo.On("Update", mockDBName, mockColName, mock.AnythingOfType("primitive.D"), mock.AnythingOfType("primitive.D")).
 			Return(1, nil).
 			Once()
@@ -102,7 +126,7 @@ func TestDeleteBook(t *testing.T) {
 	mockColName := string(mock.AnythingOfType("string"))
 	mockBookID := "000000000000000000000000"
 
-	t.Run("sucess", func(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
 		mockBookRepo.On("Delete", mockDBName, mockColName, mock.AnythingOfType("primitive.D")).
 			Return(1, nil).
 			Once()

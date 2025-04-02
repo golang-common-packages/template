@@ -1,7 +1,7 @@
 package bookUsecase
 
 import (
-	"fmt"
+	"errors"
 	"reflect"
 	"time"
 
@@ -26,6 +26,12 @@ func New(bookRepo domain.BookRepository, dbName, collectionName string) domain.B
 }
 
 func (bu *bookUsecase) InsertBooks(books *[]domain.Book) (interface{}, error) {
+	// Validate books
+	for _, book := range *books {
+		if book.Title == "" || book.Author == "" {
+			return nil, errors.New("validation failed: title and author are required")
+		}
+	}
 
 	// Dereference the pointer and update the value
 	currentTime := time.Now()
@@ -43,14 +49,27 @@ func (bu *bookUsecase) InsertBooks(books *[]domain.Book) (interface{}, error) {
 }
 
 func (bu *bookUsecase) ListBooks(limit int64, dataModel reflect.Type) (interface{}, error) {
+	if limit <= 0 {
+		return nil, errors.New("invalid limit: must be positive")
+	}
 	return bu.bookRepo.Read(bu.dbName, bu.collName, primitive.D{}, limit, dataModel)
 }
 
 func (bu *bookUsecase) UpdateBook(newData domain.Book) (interface{}, error) {
 	
-	idPrimitive, err := primitive.ObjectIDFromHex(fmt.Sprintf("%v", newData.ID))
-	if err != nil {
-		return nil, err
+	var idPrimitive primitive.ObjectID
+	var err error
+	
+	switch v := newData.ID.(type) {
+	case string:
+		idPrimitive, err = primitive.ObjectIDFromHex(v)
+		if err != nil {
+			return nil, err
+		}
+	case primitive.ObjectID:
+		idPrimitive = v
+	default:
+		return nil, errors.New("invalid book ID type")
 	}
 
 	filter := primitive.D{
