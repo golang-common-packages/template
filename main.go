@@ -42,6 +42,9 @@ func main() {
 	e := echo.New()
 	middL := BookHttpMiddleware.New()
 	e.Use(middL.CORS)
+	e.Use(middL.SecurityHeaders)
+	e.Use(middL.RequestID)
+	e.Use(middL.Logger)
 
 	bookRepo := bookMongoRepository.New(dbConn)
 	bookUCase := bookUsecase.New(bookRepo, cfg.GetString("database.mongodb.dbName"), cfg.GetString("database.mongodb.collections.book"))
