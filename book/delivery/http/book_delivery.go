@@ -6,8 +6,6 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"gopkg.in/go-playground/validator.v9"
-
 	"github.com/golang-common-packages/template/domain"
 )
 
@@ -112,19 +110,18 @@ func (b *BookHandler) Delete(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
+var bookValidator = NewBookValidator()
+
 func isRequestValid(book *domain.Book) (bool, error) {
-	validate := validator.New()
-	err := validate.Struct(book)
-	if err != nil {
+	if err := bookValidator.ValidateBook(book); err != nil {
 		return false, err
 	}
 	return true, nil
 }
 
 func isRequestValidSlice(books *[]domain.Book) (bool, error) {
-	for _, book := range *books {
-		return isRequestValid(&book)
+	if err := bookValidator.ValidateBooks(books); err != nil {
+		return false, err
 	}
-
 	return true, nil
 }

@@ -8,8 +8,8 @@ import (
 // Book ...
 type Book struct {
 	ID      interface{} `json:"id,omitempty" bson:"_id,omitempty"`
-	Title   string      `json:"title" bson:"title" validate:"required"`
-	Author  string      `json:"author" bson:"author" validate:"required"`
+	Title   string      `json:"title" bson:"title" validate:"required,notempty,max=100,excludesall=!@#$%^&*()_+"`
+	Author  string      `json:"author" bson:"author" validate:"required,notempty,max=50,alphaunicode"`
 	Updated time.Time   `json:"updated,omitempty" bson:"updated,omitempty"`
 	Created time.Time   `json:"created,omitempty" bson:"created,omitempty"`
 }
