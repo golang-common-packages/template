@@ -39,54 +39,74 @@ func (b *BookHandler) Fetch(c echo.Context) error {
 
 	listBook, err := b.BUsercase.ListBooks(int64(limit), reflect.TypeOf(domain.Book{}))
 	if err != nil {
-		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	return &AppError{
+			Err: err,
+			StatusCode: getStatusCode(err),
+			Message: "Failed to fetch books",
+		}
 	}
 
 	return c.JSON(http.StatusOK, listBook)
 }
 
-// StoreMany will store the books by given request body
 func (b *BookHandler) StoreMany(c echo.Context) error {
 	books := new([]domain.Book)
-	err := c.Bind(&books)
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+	if err := c.Bind(&books); err != nil {
+		return &AppError{
+			Err: err,
+			StatusCode: http.StatusUnprocessableEntity,
+			Message: "Invalid request body",
+		}
 	}
 
-	var ok bool
-	if ok, err = isRequestValidSlice(books); !ok {
-		return c.JSON(http.StatusBadRequest, err.Error())
+	if ok, err := isRequestValidSlice(books); !ok {
+		return &AppError{
+			Err: err,
+			StatusCode: http.StatusBadRequest,
+			Message: "Validation failed",
+		}
 	}
 
 	result, err := b.BUsercase.InsertBooks(books)
 	if err != nil {
-		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		return &AppError{
+			Err: err,
+			StatusCode: getStatusCode(err),
+			Message: "Failed to insert books",
+		}
 	}
 
 	return c.JSON(http.StatusCreated, result)
 }
 
-// Update will update book by given param
 func (b *BookHandler) Update(c echo.Context) error {
 	book := new(domain.Book)
-	err := c.Bind(&book)
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+	if err := c.Bind(&book); err != nil {
+		return &AppError{
+			Err: err,
+			StatusCode: http.StatusUnprocessableEntity,
+			Message: "Invalid request body",
+		}
 	}
 
-	_, err = b.BUsercase.UpdateBook(*book)
-	if err != nil {
-		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	if _, err := b.BUsercase.UpdateBook(*book); err != nil {
+		return &AppError{
+			Err: err,
+			StatusCode: getStatusCode(err),
+			Message: "Failed to update book",
+		}
 	}
 
 	return c.NoContent(http.StatusOK)
 }
 
-// Delete will delete book by given param
 func (b *BookHandler) Delete(c echo.Context) error {
-	_, err := b.BUsercase.DeleteBook(c.Param("id"))
-	if err != nil {
-		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	if _, err := b.BUsercase.DeleteBook(c.Param("id")); err != nil {
+		return &AppError{
+			Err: err,
+			StatusCode: getStatusCode(err),
+			Message: "Failed to delete book",
+		}
 	}
 
 	return c.NoContent(http.StatusOK)

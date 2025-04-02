@@ -8,7 +8,7 @@ import (
 	"github.com/golang-common-packages/storage"
 	"github.com/labstack/echo/v4"
 
-	"github.com/golang-common-packages/template/book/delivery/http"
+	bookHttpDelivery "github.com/golang-common-packages/template/book/delivery/http"
 	"github.com/golang-common-packages/template/book/delivery/http/middleware"
 	"github.com/golang-common-packages/template/book/repository/mongo"
 	"github.com/golang-common-packages/template/book/usecase"
@@ -40,6 +40,8 @@ func init() {
 func main() {
 
 	e := echo.New()
+	e.HTTPErrorHandler = bookHttpDelivery.ErrorHandler
+	
 	middL := BookHttpMiddleware.New()
 	e.Use(middL.CORS)
 	e.Use(middL.SecurityHeaders)
